@@ -1,3 +1,4 @@
+import './Header.css';
 const Header = () => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-dark" style={{ background: "linear-gradient(90deg, #000000, #8B0000)" }}>
@@ -13,13 +14,23 @@ const Header = () => {
 						<li className="nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" id="staffDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Nhân sự</a>
 							<ul className="dropdown-menu" aria-labelledby="staffDropdown">
-								<li><a className="dropdown-item" href="/staff">Danh sách nhân sự</a></li>
-								<li><a className="dropdown-item" href="/add-staff">Thêm nhân sự</a></li>
-								<li><hr className="dropdown-divider" /></li>
+								<li><a className="dropdown-item" href="/quan-ly-nhan-su">Quản lý nhân sự</a></li>
+								<li><a className="dropdown-item" href="/them-nhan-su">Thêm nhân sự</a></li>
+								<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #fff" }} /></li>
+								<li><a className="dropdown-item" href="/quan-ly-vi-tri">Quản lý vị trí</a></li>
+								<li><a className="dropdown-item" href="/them-vi-tri">Thêm vị trí</a></li>
+							</ul>
+						</li>
+						<li className="nav-item dropdown">
+							<a className="nav-link dropdown-toggle" href="#" id="processDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Thao tác</a>
+							<ul className="dropdown-menu" aria-labelledby="processDropdown">
+								<li><a className="dropdown-item" href="/quan-ly-thao-tac">Quản lý thao tác</a></li>
+								<li><a className="dropdown-item" href="/quan-ly-phu-kien">Quản lý phụ kiện</a></li>
+								<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #fff" }} /></li>
 								<li><a className="dropdown-item" href="/staff-department">Phòng ban</a></li>
 							</ul>
 						</li>
-						<li className="nav-item"><a className="nav-link" href="/actions"><i className="fas fa-tasks me-1"></i>Thao tác</a></li>
+
 						<li className="nav-item"><a className="nav-link" href="/errors"><i className="fas fa-exclamation-triangle me-1"></i>Lỗi thao tác</a></li>
 					</ul>
 				</div>

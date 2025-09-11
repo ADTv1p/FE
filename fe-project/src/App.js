@@ -1,9 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Home from './components/Home';
-import About from './components/About';
-import StaffManagement from "./components/StaffManagement";
-import AddStaff from "./components/AddStaff";
-import Header from './components/Header';
+import { ToastContainer } from "react-toastify";
+import Home from './components/pages/Home';
+import About from './components/pages/About';
+import StaffManagement from "./components/pages/staff/StaffManagementPage";
+import AddStaff from "./components/pages/staff/AddStaffPage";
+import PositionManagement from './components/pages/positon/PositonManagemantPage';
+import AccessoryManagemant from './components/pages/accessory/AccessoryManagemantPage';
+import Header from './components/common/Header';
 function App() {
 	return (
 		<Router>
@@ -13,10 +16,23 @@ function App() {
 			<div style={{ backgroundColor: '#78909c', padding: '2em' }}>
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/about" element={<About />} />
-					<Route path="/staff" element={<StaffManagement />} />
-					<Route path="/add-staff" element={<AddStaff />} />
+					<Route path="/gioi-thieu" element={<About />} />
+					<Route path="/quan-ly-nhan-su" element={<StaffManagement />} />
+					<Route path="/them-nhan-su" element={<AddStaff />} />
+					<Route path="/quan-ly-vi-tri" element={<PositionManagement />} />
+					<Route path="/quan-ly-phu-kien" element={<AccessoryManagemant />} />
 				</Routes>
+
+				<ToastContainer
+					position="top-right"   // ví dụ: top-right, top-center, bottom-left,...
+					autoClose={3000}       // tự tắt sau 3s
+					hideProgressBar={false}
+					newestOnTop={true}
+					closeOnClick
+					pauseOnHover
+					draggable
+					theme="colored"        // hoặc "light"/"dark"
+				/>
 			</div>
 		</Router>
 	);

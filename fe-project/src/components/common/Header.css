@@ -1,0 +1,16 @@
+.navbar .dropdown-menu {
+	background: linear-gradient(180deg, #000000, #8B0000);
+	border: none;
+	border-radius: 0;
+	position: absolute;
+	margin-top: 7px; /* tăng khoảng cách trên */
+}
+
+.navbar .dropdown-item {
+	color: #fff;
+}
+
+.navbar .dropdown-item:hover {
+	background-color: #8B0000;
+	color: #fff;
+}

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // Tạo một instance của axios
-const axios = axios.create({
-    baseURL: 'https://localhost:3001//api',
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:3001/api',
     timeout: 10000, // Thời gian chờ request (ms)
     headers: {
         'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ const axios = axios.create({
 });
 
 // Thêm interceptor để xử lý request và response
-axios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
     (config) => {
         // Thêm token vào header nếu cần
         const token = localStorage.getItem('token');
@@ -24,7 +24,7 @@ axios.interceptors.request.use(
     }
 );
 
-axios.interceptors.response.use(
+axiosInstance.interceptors.response.use(
     (response) => {
         return response.data;
     },
@@ -34,4 +34,4 @@ axios.interceptors.response.use(
     }
 );
 
-export default axios;
+export default axiosInstance;
