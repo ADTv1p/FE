@@ -13,7 +13,7 @@ function App() {
 			<nav>
 				<Header />
 			</nav>
-			<div style={{ backgroundColor: '#78909c', padding: '2em' }}>
+			<div style={{ padding: '2em', minHeight: '100vh', backgroundColor: '#eeeeefff' }}>
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/gioi-thieu" element={<About />} />
