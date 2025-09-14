@@ -3,17 +3,26 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import positionService from "../../../services/positionService";
 
+const STATUS_OPTIONS = [
+	{ value: "active", label: "Đang làm việc" },
+	{ value: "inactive", label: "Ngừng làm việc" },
+	{ value: "resigned", label: "Từ chức" },
+	{ value: "suspended", label: "Đình chỉ" },
+];
+
+const today = new Date().toISOString().split("T")[0]
+
 const AddStaff = () => {
 	const [formData, setFormData] = useState({
 		full_name: "",
 		email: "",
 		phone: "",
 		position: "",
-		department: "",
+		department: "Nhân viên thao tác",
 		date_of_birth: "",
-		start_date: "",
-		is_active: true,
-		avatar: null, // thêm ảnh
+		start_date: today,
+		status: "active",
+		avatar: null,
 	});
 	const [preview, setPreview] = useState(null);
 	const [positions, setPositions] = useState([]);
@@ -21,41 +30,45 @@ const AddStaff = () => {
 	useEffect(() => {
 		const fetchPositions = async () => {
 			try {
-				const response = await positionService.getSupportPositions();
-				if (!response.DT || response.DT.length === 0) {
+				const res = await positionService.getSupportPositions();
+				if (!res.DT || res.DT.length === 0) {
 					toast.warn("Chưa có dữ liệu vị trí để chọn!");
 				} else {
-					setPositions(response.DT);
+					setPositions(res.DT);
 				}
-			} catch (error) {
-				console.error("Lỗi khi lấy danh sách vị trí:", error);
+			} catch (err) {
+				console.error(err);
 				toast.error("Lỗi khi lấy danh sách vị trí!");
 			}
 		};
-
 		fetchPositions();
 	}, []);
 
-	const handleFileChange = (e) => {
-		const file = e.target.files[0];
-		if (file) {
-			setFormData({ ...formData, avatar: file });
-			setPreview(URL.createObjectURL(file));
-		}
-	};
-
 	const handleChange = (e) => {
-		const { name, value, type, checked } = e.target;
-		setFormData({
-			...formData,
-			[name]: type === "checkbox" ? checked : value,
-		});
+		const { name, value, type } = e.target;
+
+		if (type === "checkbox" && name === "status") {
+			setFormData((prev) => {
+				const newStatus = prev.status.includes(value)
+					? prev.status.filter((s) => s !== value)
+					: [...prev.status, value];
+				return { ...prev, status: newStatus };
+			});
+		} else if (type === "file") {
+			const file = e.target.files[0];
+			if (file) {
+				setFormData((prev) => ({ ...prev, avatar: file }));
+				setPreview(URL.createObjectURL(file));
+			}
+		} else {
+			setFormData((prev) => ({ ...prev, [name]: value }));
+		}
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log("Dữ liệu nhân sự:", formData);
-		// TODO: Gọi API backend: POST /api/staff
+		// TODO: Gọi API backend
 	};
 
 	return (
@@ -65,124 +78,105 @@ const AddStaff = () => {
 					<i className="fas fa-user-plus me-2"></i>Thêm nhân sự mới
 				</p>
 			</div>
+
 			<div className="card-body p-4">
 				<form className="row g-4" onSubmit={handleSubmit}>
-					{/* Cụm ảnh */}
+					{/* Ảnh nhân sự */}
 					<div className="col-12">
-						<div className="card shadow-sm border-0 p-3 h-100">
-							<div className="text-center">
-								{preview && (
-									<img
-										src={preview}
-										alt="Xem trước"
-										className="rounded-circle border border-2 mb-3"
-										style={{ width: "150px", height: "150px", objectFit: "cover" }}
-									/>
-								)}
-								<label className="form-label fw-bold">Ảnh nhân sự</label>
-								<input
-									type="file"
-									accept="image/*"
-									className="form-control border-dark"
-									onChange={handleFileChange}
+						<div className="card shadow-sm border-0 p-3 text-center">
+							{preview && (
+								<img
+									src={preview}
+									alt="Xem trước"
+									className="rounded-circle border mb-3"
+									style={{ width: "150px", height: "150px", objectFit: "cover" }}
 								/>
-							</div>
+							)}
+							<label className="form-label fw-bold">Ảnh nhân sự</label>
+							<input
+								type="file"
+								accept="image/*"
+								className="form-control border-dark"
+								onChange={handleChange}
+								name="avatar"
+							/>
 						</div>
 					</div>
 
-					{/* Cụm thông tin cá nhân */}
+					{/* Thông tin cá nhân */}
 					<div className="col-md-6">
 						<div className="card shadow-sm border-0 p-3 h-100">
 							<p className="fw-bold mb-3">Thông tin cá nhân</p>
-							<label className="form-label fw-bold">Họ và tên</label>
-							<input
-								type="text"
-								className="form-control border-dark mb-3"
-								name="full_name"
-								value={formData.full_name}
-								onChange={handleChange}
-								required
-							/>
-
-							<label className="form-label fw-bold">Email</label>
-							<input
-								type="email"
-								className="form-control border-dark mb-3"
-								name="email"
-								value={formData.email}
-								onChange={handleChange}
-								required
-							/>
-
-							<label className="form-label fw-bold">Số điện thoại</label>
-							<input
-								type="text"
-								className="form-control border-dark mb-3"
-								name="phone"
-								value={formData.phone}
-								onChange={handleChange}
-								required
-							/>
-
-							<label className="form-label fw-bold">Ngày sinh</label>
-							<input
-								type="date"
-								className="form-control border-dark"
-								name="date_of_birth"
-								value={formData.date_of_birth}
-								onChange={handleChange}
-							/>
+							{["full_name", "email", "phone", "date_of_birth"].map((field) => (
+								<div className="mb-3" key={field}>
+									<label className="form-label fw-bold">
+										{{
+											full_name: "Họ và tên",
+											email: "Email",
+											phone: "Số điện thoại",
+											date_of_birth: "Ngày sinh",
+										}[field]}
+									</label>
+									<input
+										type={field === "email" ? "email" : field === "date_of_birth" ? "date" : "text"}
+										className="form-control border-dark"
+										name={field}
+										value={formData[field]}
+										onChange={handleChange}
+										required={field !== "date_of_birth"}
+									/>
+								</div>
+							))}
 						</div>
 					</div>
 
-					{/* Cụm thông tin công việc */}
+					{/* Thông tin công việc */}
 					<div className="col-md-6">
 						<div className="card shadow-sm border-0 p-3 h-100">
 							<p className="fw-bold mb-3">Thông tin công việc</p>
-							<label className="form-label fw-bold">Vị trí</label>
-							<select
-								className="form-select border-dark mb-3"
-								name="position"
-								value={formData.position}
-								onChange={handleChange}
-								required
-							>
-								<option value="">Chọn vị trí</option>
-								{positions.map((pos) => (
-									<option key={pos.id} value={pos.name}>
-										{pos.name}
-									</option>
-								))}
-							</select>
 
-							<label className="form-label fw-bold">Phòng ban</label>
-							<input
-								type="text"
-								className="form-control border-dark mb-3"
-								name="department"
-								value={formData.department}
-								onChange={handleChange}
-							/>
-
-							<label className="form-label fw-bold">Ngày bắt đầu làm việc</label>
-							<input
-								type="date"
-								className="form-control border-dark mb-3"
-								name="start_date"
-								value={formData.start_date}
-								onChange={handleChange}
-								required
-							/>
-
-							<div className="form-check mt-2">
-								<input
-									className="form-check-input"
-									type="checkbox"
-									name="is_active"
-									checked={formData.is_active}
+							{/* Vị trí */}
+							<div className="mb-3">
+								<label className="form-label fw-bold">Vị trí</label>
+								<select
+									className="form-select border-dark"
+									name="position"
+									value={formData.position}
 									onChange={handleChange}
+									required
+								>
+									<option value="">Chọn vị trí</option>
+									{positions.map((pos) => (
+										<option key={pos.position_id} value={pos.position_id}>
+											{pos.code} - {pos.role}
+										</option>
+									))}
+								</select>
+							</div>
+
+							{/* Phòng ban */}
+							<div className="mb-3">
+								<label className="form-label fw-bold">Phòng ban (không điều chỉnh)</label>
+								<input
+									type="text"
+									className="form-control border border-secondary bg-light text-muted"
+									name="department"
+									value={formData.department}
+									readOnly
 								/>
-								<label className="form-check-label fw-bold">Đang làm việc</label>
+							</div>
+
+							<div className="mb-3">
+								<label className="form-label fw-bold">Ngày bắt đầu làm việc</label>
+								<input
+									type="date"
+									className="form-control border-dark"
+									name="start_date"
+									value={formData.start_date}
+									onChange={handleChange}
+									required
+									min={new Date().toISOString().split("T")[0]} // chỉ chọn từ hôm nay
+								/>
 							</div>
 						</div>
 					</div>

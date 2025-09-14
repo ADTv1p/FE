@@ -1,13 +1,13 @@
 import axios from '../axiosConfig';
 
-export const fetchQuanLiData = async () => {
+const getAllStaffs = async () => {
     try {
-        const response = await axios.get('/quan-li');
-        return response; // Trả về dữ liệu từ API
+        const response = await axios.get("/staff/list");
+        return response;
     } catch (error) {
-        console.error('Lỗi khi gọi API /quan-li:', error);
-        throw error; // Ném lỗi để xử lý ở nơi gọi
+        console.error("Lỗi khi gọi API /api/staff/list:", error);
+        throw error;
     }
 };
 
-export default { fetchQuanLiData };
+export default { getAllStaffs };

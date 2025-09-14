@@ -1,4 +1,27 @@
+import { useState, useEffect } from "react";
+import StaffTable from "./StaffTable";
+import staffService from "../../../services/staffService"; // import API service
+import { toast } from "react-toastify";
+
 const StaffManagement = () => {
+	const [staffs, setStaffs] = useState([]);
+
+	useEffect(() => {
+		const fetchStaffs = async () => {
+			try {
+				const res = await staffService.getAllStaffs();
+				if (res?.EC === 0) {
+					setStaffs(res.DT);
+				} else {
+					toast.warn("Không có dữ liệu nhân sự!");
+				}
+			} catch (err) {
+				console.error("Lỗi tải nhân sự:", err);
+				toast.error("Lỗi khi tải danh sách nhân sự.");
+			}
+		};
+		fetchStaffs();
+	}, []);
 	return (
 		<div className="shadow-lg border-0 rounded-3 bg-white p-3">
 			<p className="lead fs-2 text-center">Quản lý nhân sự</p>
@@ -45,35 +68,7 @@ const StaffManagement = () => {
 			<div className="tab-content mt-3" id="staffTabsContent">
 				{/* Tab 1 - Danh sách nhân sự */}
 				<div className="tab-pane fade show active" id="list" role="tabpanel">
-					<table className="table table-striped table-bordered">
-						<thead>
-							<tr>
-								<th>Họ và tên</th>
-								<th>Chức vụ</th>
-								<th>Phòng ban</th>
-								<th>Số điện thoại</th>
-								<th>Email</th>
-								<th>Trạng thái</th>
-								<th>Hành động</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Nguyễn Văn A</td>
-								<td>Công nhân</td>
-								<td>Sản xuất</td>
-								<td>0901234567</td>
-								<td>a@example.com</td>
-								<td>
-									<span className="badge bg-success">Đang làm</span>
-								</td>
-								<td>
-									<button className="btn btn-sm btn-primary me-2">Sửa</button>
-									<button className="btn btn-sm btn-danger">Xóa</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					<StaffTable staffList={staffs} />
 				</div>
 
 				{/* Tab 2 - Thống kê */}

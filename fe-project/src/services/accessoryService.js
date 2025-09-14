@@ -1,6 +1,5 @@
 import axios from '../axiosConfig';
 
-// Lấy danh sách phụ kiện hỗ trợ
 const getSupportAccessories = async () => {
     try {
         const response = await axios.get("/accessories/support/list");
@@ -10,8 +9,6 @@ const getSupportAccessories = async () => {
         throw error;
     }
 };
-
-// Lấy danh sách tất cả phụ kiện
 const getAllAccessories = async () => {
     try {
         const response = await axios.get("/accessories/list");
@@ -21,8 +18,6 @@ const getAllAccessories = async () => {
         throw error;
     }
 };
-
-// Thêm phụ kiện mới
 const createAccessory = async (data) => {
     try {
         const response = await axios.post("/accessories/create", data);
@@ -32,8 +27,6 @@ const createAccessory = async (data) => {
         throw error;
     }
 };
-
-// Cập nhật phụ kiện
 const updateAccessory = async (data) => {
     try {
         const response = await axios.put("/accessories/update", data);

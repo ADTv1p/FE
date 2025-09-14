@@ -25,6 +25,7 @@ const getAllPositions = async () => {
 // Hàm thêm vị trí mới
 const createPosition = async (data) => {
 	try {
+        console.log("Dữ liệu gửi đến API:", data);
 		const response = await axios.post("/positions/create", data);
 		return response;
 	} catch (error) {
