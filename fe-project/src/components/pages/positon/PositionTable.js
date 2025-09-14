@@ -14,13 +14,17 @@ const PositionTable = ({ positions, onView }) => {
 				</tr>
 			</thead>
 			<tbody>
-				{positions.length > 0 ? (
+				{positions?.length > 0 ? (
 					positions.map((p) => (
 						<tr key={p.position_id}>
-							<td>{p.code}</td>
-							<td>{p.role}</td>
-							<td>{p.process.name}</td>
-							<td>{p.process.description}</td>
+							<td className={!p.code ? "text-danger" : ""}>{p.code || "—"}</td>
+							<td className={!p.role ? "text-danger" : ""}>{p.role || "—"}</td>
+							<td className={!p.process?.name ? "text-danger" : ""}>
+								{p.process?.name || "—"}
+							</td>
+							<td className={!p.process?.description ? "text-danger" : ""}>
+								{p.process?.description || "—"}
+							</td>
 							<td>
 								<button
 									className="btn btn-sm btn-info me-2"

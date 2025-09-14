@@ -5,6 +5,8 @@ import AddProcess from "./AddProcess";
 import AddStep from "./AddStep";
 import ViewProcess from "./ViewProcess";
 import ProcessTable from "./ProcessTable";
+import ViewStep from "../step/ViewStep";
+
 import processServicie from "../../../services/processService";
 import accessoryService from "../../../services/accessoryService";
 import processStepService from "../../../services/processStepService";
@@ -12,10 +14,10 @@ import processStepService from "../../../services/processStepService";
 const ProcessManagement = () => {
 	const [activePanel, setActivePanel] = useState(null); 
 	const [selectedProcess, setSelectedProcess] = useState(null);
+	const [selectedStep, setSelectedStep] = useState('Hung');
 	const [processes, setProcesses] = useState([]);
 	const [accessories, setAccessories] = useState([]);
 	
-
 	const fetchProcesses = async () => {
 		try {
 			const res = await processServicie.getAllProcesses();
@@ -31,6 +33,17 @@ const ProcessManagement = () => {
 			const res = await accessoryService.getSupportAccessories();
 			if (res?.EC === 0) setAccessories(res.DT);
 			else toast.error(res?.EM || "Không thể tải danh sách thao tác.");
+		} catch (err) {
+			console.error("Lỗi tải thao tác:", err);
+			toast.error("Lỗi khi tải danh sách thao tác.");
+		}
+	};
+
+	const fetchStep = async (process_step_id) => {
+		try {
+			const res = await processStepService.getProcessStepInfo(process_step_id);
+			if (res?.EC === 0) setSelectedStep(res.DT);
+			else toast.error(res?.EM || "Không thể tải thông tin bước.");
 		} catch (err) {
 			console.error("Lỗi tải thao tác:", err);
 			toast.error("Lỗi khi tải danh sách thao tác.");
@@ -132,6 +145,7 @@ const ProcessManagement = () => {
 								setActivePanel(null);
 							}}
 							onAddStep={() => {setActivePanel("addStep"); fetchAccessories()}}
+							onViewStep={(step) => {setActivePanel("viewStep"); fetchStep(step.process_step_id)}}
 						/>
 					)}
 
@@ -145,7 +159,16 @@ const ProcessManagement = () => {
 					)}
 				</div>
 			</div>
-			
+			<div className="row g-4 mt-2">
+				<div className="col">
+					{activePanel === "viewStep" && selectedStep && (
+						<ViewStep
+							step={selectedStep}
+							onClose={() => setActivePanel(null)}
+						/>
+					)}
+				</div>
+			</div>
 		</div>
 	);
 };

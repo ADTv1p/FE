@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import StaffTable from "./StaffTable";
-import staffService from "../../../services/staffService"; // import API service
+import staffService from "../../../services/staffService";
 import { toast } from "react-toastify";
 
 const StaffManagement = () => {
@@ -68,7 +68,7 @@ const StaffManagement = () => {
 			<div className="tab-content mt-3" id="staffTabsContent">
 				{/* Tab 1 - Danh sách nhân sự */}
 				<div className="tab-pane fade show active" id="list" role="tabpanel">
-					<StaffTable staffList={staffs} />
+					<StaffTable staffs={staffs} />
 				</div>
 
 				{/* Tab 2 - Thống kê */}

@@ -1,4 +1,4 @@
-const ViewProcess = ({ process, onClose, onAddStep }) => {
+const ViewProcess = ({ process, onClose, onAddStep, onViewStep }) => {
 	if (!process) return null;
 
 	return (
@@ -37,12 +37,12 @@ const ViewProcess = ({ process, onClose, onAddStep }) => {
 					</thead>
 					<tbody>
 						{process.steps?.length > 0 ? (
-							process.steps.map((step, index) => (
+							process.steps.map((step) => (
 								<tr key={step.process_step_id}>
 									<td>{step.step_order}</td>
 									<td>{step.step_name}</td>
 									<td>
-										<button className="btn btn-sm btn-primary me-2">Sửa</button>
+										<button className="btn btn-sm btn-primary me-2" onClick={() => onViewStep?.(step)}>Xem</button>
 										<button className="btn btn-sm btn-danger">Xóa</button>
 									</td>
 								</tr>

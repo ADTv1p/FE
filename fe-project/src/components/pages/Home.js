@@ -1,4 +1,3 @@
-// src/pages/Home.js
 function Home() {
 	return (
 		<div className="container my-5">

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import positionService from "../../../services/positionService";
+import staffService from "../../../services/staffService";
 
 const STATUS_OPTIONS = [
 	{ value: "active", label: "Đang làm việc" },
@@ -17,7 +18,7 @@ const AddStaff = () => {
 		full_name: "",
 		email: "",
 		phone: "",
-		position: "",
+		position_id: "",
 		department: "Nhân viên thao tác",
 		date_of_birth: "",
 		start_date: today,
@@ -65,10 +66,32 @@ const AddStaff = () => {
 		}
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Dữ liệu nhân sự:", formData);
-		// TODO: Gọi API backend
+		try {
+			const res = await staffService.createStaff(formData);
+			if (res?.EC === 0) {
+				toast.success("Thêm nhân sự thành công!");
+				// reset form nếu cần
+				setFormData({
+					full_name: "",
+					email: "",
+					phone: "",
+					position_id: "",
+					department: "Nhân viên thao tác",
+					date_of_birth: "",
+					start_date: new Date().toISOString().split("T")[0],
+					status: "active",
+					avatar: null,
+				});
+				setPreview(null);
+			} else {
+				toast.error(res?.EM || "Thêm nhân sự thất bại!");
+			}
+		} catch (err) {
+			console.error("Lỗi khi thêm nhân sự:", err);
+			toast.error("Đã xảy ra lỗi khi thêm nhân sự!");
+		}
 	};
 
 	return (
@@ -99,6 +122,7 @@ const AddStaff = () => {
 								className="form-control border-dark"
 								onChange={handleChange}
 								name="avatar"
+								required
 							/>
 						</div>
 					</div>
@@ -140,8 +164,8 @@ const AddStaff = () => {
 								<label className="form-label fw-bold">Vị trí</label>
 								<select
 									className="form-select border-dark"
-									name="position"
-									value={formData.position}
+									name="position_id"
+									value={formData.position_id}
 									onChange={handleChange}
 									required
 								>

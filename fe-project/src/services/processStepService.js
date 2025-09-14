@@ -10,6 +10,16 @@ const getAllProcessSteps = async () => {
     }
 };
 
+const getProcessStepInfo = async (process_step_id) => {
+    try {
+        const response = await axios.get(`/process-steps/${process_step_id}`);
+        return response;
+    } catch (error) {
+        console.error("Lỗi khi gọi API /api/process-steps/:process_step_id:", error);
+        throw error;
+    }
+};
+
 const createProcessStep = async (data) => {
 	try {
 		const response = await axios.post("/process-steps/create", data);
@@ -22,5 +32,6 @@ const createProcessStep = async (data) => {
 
 export default { 
 	getAllProcessSteps,
+    getProcessStepInfo,
     createProcessStep 
 };

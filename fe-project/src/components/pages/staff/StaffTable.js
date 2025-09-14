@@ -1,7 +1,8 @@
 // src/components/StaffTable.js
 import React from "react";
 
-const StaffTable = ({ staffList }) => {
+const StaffTable = ({ staffs }) => {
+	console.log("Staff List:", staffs); // Debugging line to check the data
 	return (
 		<table className="table table-striped table-bordered">
 			<thead>
@@ -16,11 +17,11 @@ const StaffTable = ({ staffList }) => {
 				</tr>
 			</thead>
 			<tbody>
-				{staffList && staffList.length > 0 ? (
-					staffList.map((staff) => (
-						<tr key={staff.id}>
+				{staffs && staffs.length > 0 ? (
+					staffs.map((staff) => (
+						<tr key={staff.staff_id}>
 							<td>{staff.full_name}</td>
-							<td>{staff.position}</td>
+							<td>{staff.position_id}</td>
 							<td>{staff.department}</td>
 							<td>{staff.phone}</td>
 							<td>{staff.email}</td>
