@@ -12,12 +12,15 @@ import accessoryService from "../../../services/accessoryService";
 import processStepService from "../../../services/processStepService";
 
 const ProcessManagement = () => {
-	const [activePanel, setActivePanel] = useState(null); 
+	const [showAddProcess, setShowAddProcess] = useState(false); 
+	const [showAddStep, setShowAddStep] = useState(false); 
+	const [showProcessInfo, setShowProcessInfo] = useState(false); 
+	const [showStepInfo, setShowStepInfo] = useState(false); 
 	const [selectedProcess, setSelectedProcess] = useState(null);
-	const [selectedStep, setSelectedStep] = useState('Hung');
+	const [selectedStep, setSelectedStep] = useState(null);
 	const [processes, setProcesses] = useState([]);
 	const [accessories, setAccessories] = useState([]);
-	
+
 	const fetchProcesses = async () => {
 		try {
 			const res = await processServicie.getAllProcesses();
@@ -64,7 +67,7 @@ const ProcessManagement = () => {
 			if (res?.EC === 0) {
 				toast.success("Thêm thao tác thành công!");
 				setProcesses((prev) => [...prev, res.DT]); // Thêm thao tác mới vào danh sách
-				setActivePanel(null);
+				setShowAddProcess(false);
 			} else {
 				toast.error(res?.EM || "Không thể thêm thao tác.");
 			}
@@ -91,7 +94,7 @@ const ProcessManagement = () => {
 					...prev,
 					steps: [...(prev?.steps || []), res.DT],
 				}));
-				setActivePanel(null);
+				setShowAddStep(false);
 			} else {
 				toast.error(res?.EM || "Không thể thêm bước.");
 			}
@@ -106,68 +109,55 @@ const ProcessManagement = () => {
 			<p className="lead fs-2 mb-3 text-center">Quản lý thao tác</p>
 			<div className="row g-4">
 				{/* Cột bảng */}
-				<div className={`col-${activePanel ? "6" : "12"}`}>
-					<div className="shadow-sm border-0 rounded-3 bg-white p-3">
-						<div className="d-flex justify-content-end align-items-center mb-2">
-							<button
-								className="btn btn-success"
-								onClick={() => setActivePanel("add")}
-							>
+				<div className={`col-${(showAddProcess || showAddStep || showProcessInfo) ? 6 : 12}`}>
+					<div className="shadow-sm border-0 rounded-3 bg-white p-3 mb-4">
+						<div className="d-flex justify-content-end mb-2">
+							<button className="btn btn-success" onClick={() => setShowAddProcess(true)}>
 								Thêm thao tác
 							</button>
 						</div>
 						<ProcessTable
 							processes={processes}
 							onEdit={(p) => console.log("Sửa", p)}
-							onView={(p) => {
-								setSelectedProcess(p);
-								setActivePanel("view");
-							}}
+							onView={(p) => { setSelectedProcess(p); setShowProcessInfo(true); }}
 							onDelete={(id) => console.log("Xóa", id)}
 						/>
 					</div>
 				</div>
 
-				{/* Cột form */}
-				<div className="col-6">
-					{activePanel === "add" && (
-						<AddProcess
-							onSubmit={handleAddProcess}
-							onClose={() => setActivePanel(null)}
-						/>
-					)}
+				{/* Cột chi tiết / form */}
+				{(showAddProcess || showAddStep || showProcessInfo || showStepInfo) && (
+					<div className="col-6">
+						{showStepInfo && selectedStep && (
+							<ViewStep step={selectedStep} onClose={() => setShowStepInfo(false)} />
+						)}
 
-					{activePanel === "view" && selectedProcess && (
-						<ViewProcess
-							process={selectedProcess}
-							onClose={() => {
-								setSelectedProcess(null);
-								setActivePanel(null);
-							}}
-							onAddStep={() => {setActivePanel("addStep"); fetchAccessories()}}
-							onViewStep={(step) => {setActivePanel("viewStep"); fetchStep(step.process_step_id)}}
-						/>
-					)}
+						{showAddProcess && (
+							<AddProcess
+								onSubmit={handleAddProcess}
+								onClose={() => setShowAddProcess(false)}
+							/>
+						)}
 
-					{activePanel === "addStep" && selectedProcess && (
-						<AddStep
-							process={selectedProcess}
-							accessories={accessories}
-							onClose={() => setActivePanel(null)}
-							onSubmit={handleAddStep}
-						/>
-					)}
-				</div>
-			</div>
-			<div className="row g-4 mt-2">
-				<div className="col">
-					{activePanel === "viewStep" && selectedStep && (
-						<ViewStep
-							step={selectedStep}
-							onClose={() => setActivePanel(null)}
-						/>
-					)}
-				</div>
+						{showProcessInfo && selectedProcess && (
+							<ViewProcess
+								process={selectedProcess}
+								onClose={() => { setSelectedProcess(null); setShowProcessInfo(false); }}
+								onAddStep={() => { setShowAddStep(true); fetchAccessories(); }}
+								onViewStep={(step) => { setShowStepInfo(true); fetchStep(step.process_step_id); }}
+							/>
+						)}
+
+						{showAddStep && selectedProcess && (
+							<AddStep
+								process={selectedProcess}
+								accessories={accessories}
+								onClose={() => setShowAddStep(false)}
+								onSubmit={handleAddStep}
+							/>
+						)}
+					</div>
+				)}
 			</div>
 		</div>
 	);

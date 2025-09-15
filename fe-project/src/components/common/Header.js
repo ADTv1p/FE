@@ -1,7 +1,7 @@
 import './Header.css';
 const Header = () => {
 	return (
-		<nav className="navbar navbar-expand-lg navbar-dark" style={{ background: "linear-gradient(90deg, #000000, #8B0000)" }}>
+		<nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: "#2cbba1ff" }}>
 			<div className="container-fluid">
 				<a className="navbar-brand fw-bold" href="/"><i className="fas fa-industry me-2"></i>Quản lý quy trình quấn dây điện</a>
 				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,7 +13,7 @@ const Header = () => {
 						<li className="nav-item"><a className="nav-link" href="/about"><i className="fas fa-info-circle me-1"></i>Giới thiệu</a></li>
 						<li className="nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" id="staffDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Nhân sự</a>
-							<ul className="dropdown-menu" aria-labelledby="staffDropdown">
+							<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="staffDropdown">
 								<li><a className="dropdown-item" href="/quan-ly-nhan-su">Quản lý nhân sự</a></li>
 								<li><a className="dropdown-item" href="/them-nhan-su">Thêm nhân sự</a></li>
 								<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #fff" }} /></li>
@@ -23,7 +23,7 @@ const Header = () => {
 						</li>
 						<li className="nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" id="processDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Thao tác</a>
-							<ul className="dropdown-menu" aria-labelledby="processDropdown">
+							<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="processDropdown">
 								<li><a className="dropdown-item" href="/quan-ly-thao-tac">Quản lý thao tác</a></li>
 								<li><a className="dropdown-item" href="/quan-ly-phu-kien">Quản lý phụ kiện</a></li>
 								<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #fff" }} /></li>
@@ -31,7 +31,13 @@ const Header = () => {
 							</ul>
 						</li>
 
-						<li className="nav-item"><a className="nav-link" href="/errors"><i className="fas fa-exclamation-triangle me-1"></i>Lỗi thao tác</a></li>
+						<li className="nav-item dropdown">
+							<a className="nav-link dropdown-toggle" href="#" id="errorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Lỗi thao tác</a>
+							<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="errorDropdown">
+								<li><a className="dropdown-item" href="/quan-ly-loi">Quản lý lỗi</a></li>
+								<li><a className="dropdown-item text-danger" href="/bao-cao-loi">Báo cáo lỗi</a></li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 			</div>

@@ -15,6 +15,7 @@ const getSupportPositions = async () => {
 const getAllPositions = async () => {
     try {
         const response = await axios.get("/positions/list");
+        console.log("Response from /positions/list:", response);
         return response;
     } catch (error) {
         console.error("Lỗi khi gọi API /api/positions:", error);

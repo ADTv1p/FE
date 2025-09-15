@@ -8,6 +8,8 @@ import PositionManagement from './components/pages/positon/PositonManagemantPage
 import AddPosition from './components/pages/positon/AddPositionPage';
 import AccessoryManagemant from './components/pages/accessory/AccessoryManagemantPage';
 import ProcessManagement from './components/pages/process/ProcessManagementPage';
+import ReportError from './components/pages/error/ReportErrorPage';
+import ErrorManagerment from './components/pages/error/ErrorManagermentPage';
 import Header from './components/common/Header';
 function App() {
 	return (
@@ -15,7 +17,7 @@ function App() {
 			<nav>
 				<Header />
 			</nav>
-			<div style={{ padding: '2em', minHeight: '100vh', backgroundColor: '#cfbfbfff' }}>
+			<div style={{ padding: '2em', minHeight: '100vh', backgroundColor: '#e9e9e9ff' }}>
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/gioi-thieu" element={<About />} />
@@ -25,6 +27,8 @@ function App() {
 					<Route path="/them-vi-tri" element={<AddPosition />} />
 					<Route path="/quan-ly-phu-kien" element={<AccessoryManagemant />} />
 					<Route path="/quan-ly-thao-tac" element={<ProcessManagement />} />
+					<Route path="/quan-ly-loi" element={<ErrorManagerment />} />
+					<Route path="/bao-cao-loi" element={<ReportError />} />
 				</Routes>
 
 				<ToastContainer
