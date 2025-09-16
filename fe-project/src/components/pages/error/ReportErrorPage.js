@@ -43,10 +43,8 @@ const ReportError = () => {
 
 	const fetchPositions = async () => {
 		try {
-			const res = await positionService.getAllPositions();
+			const res = await positionService.getSupportPositions();
 			if (res?.EC === 0) {
-				console.log(res?.DT);
-
 				setPositions(res?.DT);
 			} else {
 				toast.warning(res?.EM || "Không thể lấy danh sách vị trí!");
@@ -118,7 +116,13 @@ const ReportError = () => {
 				/>
 			)}
 
-			<ReportErrorForm onSubmit={handleAddReport}  onShowAddError={openAddErrorForm} errors={errors} workOrders ={workOrders} positions={positions}/>
+			<ReportErrorForm 
+				onSubmit={handleAddReport} 
+			 	onShowAddError={openAddErrorForm} 
+				errors={errors} 
+				workOrders ={workOrders} 
+				positions={positions}
+			/>
 		</div>
 	);
 };

@@ -1,3 +1,5 @@
+import { AddButton, CloseButton, DeleteButton, EditButton } from "../../common/ActionButtons";
+
 const ViewPosition = ({ position, onClose, onAddStep }) => {
 	if (!position?.process) return null;
 
@@ -7,13 +9,10 @@ const ViewPosition = ({ position, onClose, onAddStep }) => {
 		<div className="card shadow-sm border">
 			<div className="card-header d-flex justify-content-between align-items-center py-2 bg-light">
 				<p className="lead fs-5 mb-0">Chi tiết thao tác</p>
-				<button
-					type="button"
-					className="btn btn-sm btn-outline-secondary"
+				<CloseButton
+				size="small"
 					onClick={onClose}
-				>
-					Đóng
-				</button>
+				/>
 			</div>
 
 			<div className="card-body p-3">
@@ -44,8 +43,8 @@ const ViewPosition = ({ position, onClose, onAddStep }) => {
 									<td>{step.step_order}</td>
 									<td>{step.step_name}</td>
 									<td>
-										<button className="btn btn-sm btn-primary me-2">Sửa</button>
-										<button className="btn btn-sm btn-danger">Xóa</button>
+										<EditButton size="small" className="me-2">Sửa</EditButton>
+										<DeleteButton size="small">Xóa</DeleteButton>
 									</td>
 								</tr>
 							))
@@ -60,12 +59,11 @@ const ViewPosition = ({ position, onClose, onAddStep }) => {
 				</table>
 
 				<div className="d-grid mt-3">
-					<button
-						className="btn btn-outline-primary"
+					<AddButton
 						onClick={() => onAddStep?.(process)}
 					>
-						<i className="fas fa-plus me-2"></i>Thêm bước cho thao tác
-					</button>
+						Thêm bước cho thao tác
+					</AddButton>
 				</div>
 			</div>
 		</div>

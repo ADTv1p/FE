@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import positionService from "../../../services/positionService";
 import staffService from "../../../services/staffService";
+import { ConfirmButton } from "../../common/ActionButtons";
 
 const STATUS_OPTIONS = [
 	{ value: "active", label: "Đang làm việc" },
@@ -207,9 +208,9 @@ const AddStaff = () => {
 
 					{/* Nút submit */}
 					<div className="col-12 text-center">
-						<button type="submit" className="btn btn-success px-4">
-							<i className="fas fa-save me-2"></i> Thêm nhân sự
-						</button>
+						<ConfirmButton type="submit">
+							Thêm nhân sự
+						</ConfirmButton>
 					</div>
 				</form>
 			</div>

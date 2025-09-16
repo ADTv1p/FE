@@ -1,55 +1,88 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-
 import AddProcess from "./AddProcess";
 import AddStep from "./AddStep";
 import ViewProcess from "./ViewProcess";
 import ProcessTable from "./ProcessTable";
 import ViewStep from "../step/ViewStep";
-
-import processServicie from "../../../services/processService";
+import processService from "../../../services/processService";
 import accessoryService from "../../../services/accessoryService";
 import processStepService from "../../../services/processStepService";
+import { AddButton } from "../../common/ActionButtons";
+import ExportButton from "../../common/ExportButton";
+import IfLoading from "../../common/IfLoading";
+import IfError from "../../common/IfError";
+
+// Hàm tiện ích để hiển thị toast lỗi
+const showErrorToast = (error, defaultMessage) => {
+	console.error(defaultMessage, error);
+	toast.error(error?.response?.data?.EM || defaultMessage);
+};
+
+// Hàm tiện ích để đóng modal
+const closeModal = (modalId) => {
+	const modal = document.getElementById(modalId);
+	if (modal) {
+		const bsModal = window.bootstrap.Modal.getInstance(modal);
+		bsModal?.hide();
+	}
+};
 
 const ProcessManagement = () => {
-	const [showAddProcess, setShowAddProcess] = useState(false); 
-	const [showAddStep, setShowAddStep] = useState(false); 
-	const [showProcessInfo, setShowProcessInfo] = useState(false); 
-	const [showStepInfo, setShowStepInfo] = useState(false); 
 	const [selectedProcess, setSelectedProcess] = useState(null);
 	const [selectedStep, setSelectedStep] = useState(null);
 	const [processes, setProcesses] = useState([]);
 	const [accessories, setAccessories] = useState([]);
+	const [showProcessInfo, setShowProcessInfo] = useState(false);
+	const [showStepInfo, setShowStepInfo] = useState(false);
+	const [showAddProcessModal, setShowAddProcessModal] = useState(false);
+	const [showAddStepModal, setShowAddStepModal] = useState(false);
+	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const fetchProcesses = async () => {
+		setLoading(true);
+		setError(false);
 		try {
-			const res = await processServicie.getAllProcesses();
-			if (res?.EC === 0) setProcesses(res.DT);
+			const res = await processService.getAllProcesses();
+			if (res?.EC === 0) {
+				setProcesses(res.DT);
+			} else {
+				setError(true);
+				showErrorToast(null, "Không thể tải danh sách thao tác.");
+			}
 		} catch (err) {
-			console.error("Lỗi tải phụ kiện:", err);
-			toast.error("Lỗi khi tải danh sách phụ kiện.");
+			setError(true);
+			showErrorToast(err, "Lỗi tải danh sách thao tác:");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const fetchAccessories = async () => {
 		try {
 			const res = await accessoryService.getSupportAccessories();
-			if (res?.EC === 0) setAccessories(res.DT);
-			else toast.error(res?.EM || "Không thể tải danh sách thao tác.");
+			if (res?.EC === 0) {
+				setAccessories(res.DT);
+			} else {
+				showErrorToast(null, "Không thể tải danh sách phụ kiện.");
+			}
 		} catch (err) {
-			console.error("Lỗi tải thao tác:", err);
-			toast.error("Lỗi khi tải danh sách thao tác.");
+			showErrorToast(err, "Lỗi tải phụ kiện:");
 		}
 	};
 
 	const fetchStep = async (process_step_id) => {
 		try {
 			const res = await processStepService.getProcessStepInfo(process_step_id);
-			if (res?.EC === 0) setSelectedStep(res.DT);
-			else toast.error(res?.EM || "Không thể tải thông tin bước.");
+			if (res?.EC === 0) {
+				setSelectedStep(res.DT);
+				setShowStepInfo(true);
+			} else {
+				showErrorToast(null, "Không thể tải thông tin bước.");
+			}
 		} catch (err) {
-			console.error("Lỗi tải thao tác:", err);
-			toast.error("Lỗi khi tải danh sách thao tác.");
+			showErrorToast(err, "Lỗi tải thông tin bước:");
 		}
 	};
 
@@ -59,106 +92,134 @@ const ProcessManagement = () => {
 
 	const handleAddProcess = async (data) => {
 		if (!data.name?.trim()) return toast.warning("Tên thao tác không được để trống!");
-		if (!data.description?.trim())
-			return toast.warning("Mô tả thao tác không được để trống!");
+		if (!data.description?.trim()) return toast.warning("Mô tả thao tác không được để trống!");
 
 		try {
-			const res = await processServicie.createProcess(data);
+			const res = await processService.createProcess(data);
 			if (res?.EC === 0) {
 				toast.success("Thêm thao tác thành công!");
-				setProcesses((prev) => [...prev, res.DT]); // Thêm thao tác mới vào danh sách
-				setShowAddProcess(false);
+				setProcesses((prev) => [...prev, res.DT]);
+				setShowAddProcessModal(false);
 			} else {
-				toast.error(res?.EM || "Không thể thêm thao tác.");
+				showErrorToast(null, "Không thể thêm thao tác.");
 			}
 		} catch (err) {
-			console.error("Lỗi khi thêm thao tác:", err);
-			toast.error("Lỗi kết nối khi thêm thao tác.");
+			showErrorToast(err, "Lỗi kết nối khi thêm thao tác:");
 		}
 	};
 
 	const handleAddStep = async (stepData) => {
-		if (!stepData.step_order || stepData.step_order < 1)
+		if (!stepData.step_order || stepData.step_order < 1) {
 			return toast.warning("Thứ tự bước phải lớn hơn 0!");
-		if (!stepData.step_name?.trim())
+		}
+		if (!stepData.step_name?.trim()) {
 			return toast.warning("Tên bước không được để trống!");
-		if (!stepData.instruction?.trim())
+		}
+		if (!stepData.instruction?.trim()) {
 			return toast.warning("Hướng dẫn bước không được để trống!");
+		}
 		try {
 			const res = await processStepService.createProcessStep(stepData);
-			console.log("Res thêm bước:", res);
 			if (res?.EC === 0) {
 				toast.success("Thêm bước thành công!");
-				// Cập nhật lại steps cho process đang xem
 				setSelectedProcess((prev) => ({
 					...prev,
-					steps: [...(prev?.steps || []), res.DT],
+					steps: prev ? [...(prev.steps || []), res.DT] : [res.DT],
 				}));
-				setShowAddStep(false);
+				setShowAddStepModal(false);
 			} else {
-				toast.error(res?.EM || "Không thể thêm bước.");
+				showErrorToast(null, "Không thể thêm bước.");
 			}
 		} catch (err) {
-			console.error("Lỗi khi thêm bước:", err);
-			toast.error("Lỗi kết nối khi thêm bước.");
+			showErrorToast(err, "Lỗi kết nối khi thêm bước:");
 		}
 	};
 
+	const handleViewProcess = (process) => {
+		setSelectedProcess(process);
+		setShowProcessInfo(true);
+		setShowStepInfo(false);
+	};
+
+	const handleViewStep = (step) => {
+		fetchStep(step.process_step_id);
+	};
+
+	const handleCloseViewProcess = () => {
+		setSelectedProcess(null);
+		setShowProcessInfo(false);
+	};
+
+	const handleCloseViewStep = () => {
+		setSelectedStep(null);
+		setShowStepInfo(false);
+	};
+
+	if (loading) return <IfLoading />
+	if (error) return <IfError />
+
 	return (
-		<div>
-			<p className="lead fs-2 mb-3 text-center">Quản lý thao tác</p>
+		<div className="container">
+			<div className="card shadow-sm border-0 mb-2">
+				<div className="card-body text-center d-flex justify-content-between">
+					<h2 className="fs-2 lead">Quản lý thao tác</h2>
+					<div>
+						<AddButton
+							className="me-2"
+							onClick={() => setShowAddProcessModal(true)}
+						>
+							Thêm thao tác
+						</AddButton>
+						<ExportButton className="me-2">
+							Xuất Danh Sách Thao Tác
+						</ExportButton>
+					</div>
+				</div>
+			</div>
 			<div className="row g-4">
-				{/* Cột bảng */}
-				<div className={`col-${(showAddProcess || showAddStep || showProcessInfo) ? 6 : 12}`}>
+				<div className={showProcessInfo || showStepInfo ? "col-6" : "col-12"}>
 					<div className="shadow-sm border-0 rounded-3 bg-white p-3 mb-4">
-						<div className="d-flex justify-content-end mb-2">
-							<button className="btn btn-success" onClick={() => setShowAddProcess(true)}>
-								Thêm thao tác
-							</button>
-						</div>
 						<ProcessTable
 							processes={processes}
 							onEdit={(p) => console.log("Sửa", p)}
-							onView={(p) => { setSelectedProcess(p); setShowProcessInfo(true); }}
+							onView={handleViewProcess}
 							onDelete={(id) => console.log("Xóa", id)}
 						/>
 					</div>
 				</div>
-
-				{/* Cột chi tiết / form */}
-				{(showAddProcess || showAddStep || showProcessInfo || showStepInfo) && (
+				{(showProcessInfo || showStepInfo) && (
 					<div className="col-6">
-						{showStepInfo && selectedStep && (
-							<ViewStep step={selectedStep} onClose={() => setShowStepInfo(false)} />
-						)}
-
-						{showAddProcess && (
-							<AddProcess
-								onSubmit={handleAddProcess}
-								onClose={() => setShowAddProcess(false)}
-							/>
-						)}
-
 						{showProcessInfo && selectedProcess && (
 							<ViewProcess
 								process={selectedProcess}
-								onClose={() => { setSelectedProcess(null); setShowProcessInfo(false); }}
-								onAddStep={() => { setShowAddStep(true); fetchAccessories(); }}
-								onViewStep={(step) => { setShowStepInfo(true); fetchStep(step.process_step_id); }}
+								onClose={handleCloseViewProcess}
+								onAddStep={() => {
+									fetchAccessories();
+									setShowAddStepModal(true);
+								}}
+								onViewStep={handleViewStep}
 							/>
 						)}
-
-						{showAddStep && selectedProcess && (
-							<AddStep
-								process={selectedProcess}
-								accessories={accessories}
-								onClose={() => setShowAddStep(false)}
-								onSubmit={handleAddStep}
-							/>
+						{showStepInfo && selectedStep && (
+							<ViewStep step={selectedStep} onClose={handleCloseViewStep} />
 						)}
 					</div>
 				)}
 			</div>
+
+			{/* Modal Components */}
+			<AddProcess
+				show={showAddProcessModal}
+				onSubmit={handleAddProcess}
+				onClose={() => setShowAddProcessModal(false)}
+			/>
+			<AddStep
+				show={showAddStepModal}
+				process={selectedProcess}
+				accessories={accessories}
+				onClose={() => setShowAddStepModal(false)}
+				onSubmit={handleAddStep}
+			/>
 		</div>
 	);
 };

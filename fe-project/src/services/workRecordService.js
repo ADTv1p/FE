@@ -12,9 +12,9 @@ const getAllWorkRecords = async () => {
 };
 
 // Lấy chi tiết bản ghi công việc theo ID
-const getWorkRecordByIdApiService = async (id) => {
+const getWorkRecordByIdApiService = async (work_record_id) => {
 	try {
-		const response = await axios.get(`/work-records/${id}`);
+		const response = await axios.get(`/work-records/${work_record_id}`);
 		return response;
 	} catch (error) {
 		console.error("Lỗi khi gọi API /api/work-records/:id:", error);

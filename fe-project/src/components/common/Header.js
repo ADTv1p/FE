@@ -1,7 +1,7 @@
 import './Header.css';
 const Header = () => {
 	return (
-		<nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: "#2cbba1ff" }}>
+		<nav className="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm" style={{ backgroundColor: "#2cbba1ff" }}>
 			<div className="container-fluid">
 				<a className="navbar-brand fw-bold" href="/"><i className="fas fa-industry me-2"></i>Quản lý quy trình quấn dây điện</a>
 				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,13 +21,13 @@ const Header = () => {
 								<li><a className="dropdown-item" href="/them-vi-tri">Thêm vị trí</a></li>
 							</ul>
 						</li>
-						<li className="nav-item dropdown">
+						<li className="nav-item dropdown" style={{ position: "relative", zIndex: 1055 }}>
 							<a className="nav-link dropdown-toggle" href="#" id="processDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Thao tác</a>
 							<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="processDropdown">
 								<li><a className="dropdown-item" href="/quan-ly-thao-tac">Quản lý thao tác</a></li>
 								<li><a className="dropdown-item" href="/quan-ly-phu-kien">Quản lý phụ kiện</a></li>
 								<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #fff" }} /></li>
-								<li><a className="dropdown-item" href="/staff-department">Phòng ban</a></li>
+								<li><a className="dropdown-item" href="/thong-ke-thao-tac">Thống kê thao tác</a></li>
 							</ul>
 						</li>
 
@@ -35,7 +35,9 @@ const Header = () => {
 							<a className="nav-link dropdown-toggle" href="#" id="errorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Lỗi thao tác</a>
 							<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="errorDropdown">
 								<li><a className="dropdown-item" href="/quan-ly-loi">Quản lý lỗi</a></li>
-								<li><a className="dropdown-item text-danger" href="/bao-cao-loi">Báo cáo lỗi</a></li>
+								<li><a className="dropdown-item" href="/bao-cao-loi">Báo cáo lỗi</a></li>
+								<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #fff" }} /></li>
+								<li><a className="dropdown-item" href="/thong-ke-loi">Thống kê lỗi</a></li>
 							</ul>
 						</li>
 					</ul>

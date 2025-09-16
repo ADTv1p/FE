@@ -3,7 +3,8 @@
 	border: none;
 	border-radius: .5em;
 	position: absolute;
-	margin-top: 7px; /* tăng khoảng cách trên */
+	margin-top: 7px; 
+	z-index: 2000
 }
 
 .navbar .dropdown-item {

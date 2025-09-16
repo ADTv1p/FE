@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import AddAccessory from "./AddAccessory";
 import UpdateAccessory from "./UpdateAccessory";
 import accessoryService from "../../../services/accessoryService";
+import { AddButton, ConfirmButton, CloseButton, DeleteButton, EditButton } from '../../common/ActionButtons';
 
 const AccessoryManagement = () => {
 	const [showForm, setShowForm] = useState(null);
@@ -57,74 +58,74 @@ const AccessoryManagement = () => {
 };
 
 	return (
-		<div className="row g-4">
-			{/* Cột trái: bảng */}
-			<div className={showForm ? "col-9" : "col-12"}>
-				<div className="d-flex justify-content-between mb-3">
-					<button
-						className="btn btn-success"
-						onClick={() => setShowForm("add")}
-					>
-						<i className="fas fa-plus me-2"></i>Thêm phụ kiện
-					</button>
-				</div>
-				<div className="shadow-sm border-0 rounded-3 bg-white p-3">
-					<p className="lead fs-2 text-center">Quản lý phụ kiện</p>
-					<hr />
-					<table className="table table-striped table-bordered">
-						<thead>
-							<tr>
-								<th>Tên phụ kiện</th>
-								<th>Loại</th>
-								<th>Hành động</th>
-							</tr>
-						</thead>
-						<tbody>
-							{accessories.length > 0 ? (
-								accessories.map((item, index) => (
-									<tr key={index}>
-										<td>{item.name}</td>
-										<td>{item.type}</td>
-										<td>
-											<button
-												className="btn btn-sm btn-primary me-2"
-												onClick={() => {
-													setSelectedAccessory(item);
-													setShowForm("update");
-												}}
-											>
-												Sửa
-											</button>
-											<button className="btn btn-sm btn-danger">Xóa</button>
-										</td>
-									</tr>
-								))
-							) : (
-								<tr>
-									<td colSpan={3} className="text-center">
-										Chưa có phụ kiện nào
-									</td>
-								</tr>
-							)}
-						</tbody>
-					</table>
+		<div className="container">
+			<div className="card shadow-sm border-0 mb-2">
+                <div className="card-body d-flex justify-content-between align-items-center">
+					<h2 className="fs-2 lead">Quản lý lỗi</h2>
+                    <div>
+						<AddButton onClick={() => setShowForm("add")} >
+							Thêm phụ kiện
+						</AddButton>
+					</div>
 				</div>
 			</div>
-
-			{showForm === "add" && (
-				<div className="col-3">
-					<AddAccessory onSubmit={handleAddAccessory} onClose={() => setShowForm(null)} />
+			<div className="row">
+				{/* Cột trái: bảng */}
+				<div className={showForm ? "col-9" : "col-12"}>
+					<div className="card shadow-sm border-0 rounded">
+						<div className="card-body">
+							<table className="table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th>Tên phụ kiện</th>
+										<th>Loại</th>
+										<th>Hành động</th>
+									</tr>
+								</thead>
+								<tbody>
+									{accessories.length > 0 ? (
+										accessories.map((item, index) => (
+											<tr key={index}>
+												<td>{item.name}</td>
+												<td>{item.type}</td>
+												<td>
+													<EditButton
+														className="me-2"
+														size="small"
+														onClick={() => {
+															setSelectedAccessory(item);
+															setShowForm("update");
+														}}
+													/>
+													<DeleteButton size="small" />
+												</td>
+											</tr>
+										))
+									) : (
+										<tr>
+											<td colSpan={3} className="text-center">
+												Chưa có phụ kiện nào
+											</td>
+										</tr>
+									)}
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
-			)}
-			
-			{showForm === "update" && selectedAccessory && (
-				<div className="col-3">
-					<UpdateAccessory accessory={selectedAccessory} onSubmit={handleUpdateAccessory} onClose={() => setShowForm("add")} />
-				</div>
-			)}
 
+				{showForm === "add" && (
+					<div className="col-3">
+						<AddAccessory onSubmit={handleAddAccessory} onClose={() => setShowForm(null)} />
+					</div>
+				)}
 				
-
+				{showForm === "update" && selectedAccessory && (
+					<div className="col-3">
+						<UpdateAccessory accessory={selectedAccessory} onSubmit={handleUpdateAccessory} onClose={() => setShowForm("add")} />
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

@@ -9,14 +9,14 @@ import AddPosition from './components/pages/positon/AddPositionPage';
 import AccessoryManagemant from './components/pages/accessory/AccessoryManagemantPage';
 import ProcessManagement from './components/pages/process/ProcessManagementPage';
 import ReportError from './components/pages/error/ReportErrorPage';
+import ReportErrorDetail from './components/pages/error/ReportErrorDetailPage';
+import ErrorStatistics from './components/pages/statistic/ErrorStatisticsPage';
 import ErrorManagerment from './components/pages/error/ErrorManagermentPage';
 import Header from './components/common/Header';
 function App() {
 	return (
 		<Router>
-			<nav>
-				<Header />
-			</nav>
+			<Header />
 			<div style={{ padding: '2em', minHeight: '100vh', backgroundColor: '#e9e9e9ff' }}>
 				<Routes>
 					<Route path="/" element={<Home />} />
@@ -28,7 +28,9 @@ function App() {
 					<Route path="/quan-ly-phu-kien" element={<AccessoryManagemant />} />
 					<Route path="/quan-ly-thao-tac" element={<ProcessManagement />} />
 					<Route path="/quan-ly-loi" element={<ErrorManagerment />} />
+					<Route path="/chi-tiet-loi/:work_record_id" element={<ReportErrorDetail />} />
 					<Route path="/bao-cao-loi" element={<ReportError />} />
+					<Route path="/thong-ke-loi" element={<ErrorStatistics />} />
 				</Routes>
 
 				<ToastContainer

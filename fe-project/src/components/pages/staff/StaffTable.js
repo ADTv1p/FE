@@ -1,5 +1,6 @@
 // src/components/StaffTable.js
 import React from "react";
+import { DeleteButton, EditButton } from "../../common/ActionButtons";
 
 const StaffTable = ({ staffs }) => {
 	console.log("Staff List:", staffs); // Debugging line to check the data
@@ -43,8 +44,8 @@ const StaffTable = ({ staffs }) => {
 								</span>
 							</td>
 							<td>
-								<button className="btn btn-sm btn-primary me-2">Sửa</button>
-								<button className="btn btn-sm btn-danger">Xóa</button>
+								<EditButton className="me-2" size="small">Sửa</EditButton>
+								<DeleteButton size="small">Xóa</DeleteButton>
 							</td>
 						</tr>
 					))

@@ -1,69 +1,63 @@
-// src/components/processes/AddProcess.jsx
-import React, { useState } from "react";
+// AddProcess.jsx
+import { useState } from "react";
+import { ConfirmButton } from "../../common/ActionButtons";
 
-const AddProcess = ({ onSubmit, onClose }) => {
-	const [formData, setFormData] = useState({
-		name: "",
-		description: "",
-	});
+const AddProcess = ({ show, onSubmit, onClose }) => {
+	const [name, setName] = useState("");
+	const [description, setDescription] = useState("");
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData({ ...formData, [name]: value });
-	};
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		if (onSubmit) onSubmit(formData);
-		setFormData({ name: "", description: "" });
+	const handleSubmit = () => {
+		onSubmit({ name, description });
+		setName("");
+		setDescription("");
 	};
 
 	return (
-		<div className="card shadow-sm border-0 mb-4">
-			<div className="card-header d-flex justify-content-between align-items-center py-2 bg-light">
-				<p className="lead fs-5 mb-0">Thêm thao tác mới</p>
-				<button
-					type="button"
-					className="btn btn-sm btn-outline-secondary"
-					onClick={onClose}
-				>
-					Đóng
-				</button>
+		<>
+			{show && <div className="modal-backdrop fade show"></div>}
+			<div className={`modal fade ${show ? "show d-block" : ""}`} tabIndex="-1">
+				<div className="modal-dialog modal-dialog-centered">
+					<div className="modal-content">
+						<div className="modal-header">
+							<h5 className="modal-title">Thêm thao tác</h5>
+							<button
+								type="button"
+								className="btn-close"
+								onClick={onClose}
+							></button>
+						</div>
+						<div className="modal-body p-3">
+							<form onSubmit={handleSubmit}>
+								<div className="mb-2">
+									<label className="form-label">Tên thao tác</label>
+									<input
+										type="text"
+										className="form-control"
+										value={name}
+										onChange={(e) => setName(e.target.value)}
+										placeholder="Nhập tên thao tác"
+										required
+									/>
+								</div>
+								<div className="mb-2">
+									<label className="form-label">Mô tả</label>
+									<textarea
+										className="form-control"
+										value={description}
+										onChange={(e) => setDescription(e.target.value)}
+										placeholder="Nhập mô tả"
+										required
+									/>
+								</div>
+								<ConfirmButton className="w-100" type="submit" disabled={!name || !description}>
+									Thêm thao tác
+								</ConfirmButton>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div className="card-body p-3">
-				<form onSubmit={handleSubmit} className="row g-3">
-					<div className="col-12">
-						<label className="form-label fw-semibold">Tên thao tác</label>
-						<input
-							type="text"
-							className="form-control"
-							name="name"
-							value={formData.name}
-							onChange={handleChange}
-							required
-						/>
-					</div>
-
-					<div className="col-12">
-						<label className="form-label fw-semibold">Mô tả</label>
-						<textarea
-							className="form-control"
-							name="description"
-							value={formData.description}
-							onChange={handleChange}
-							rows="3"
-							required
-						/>
-					</div>
-
-					<div className="col-12 d-grid mt-3">
-						<button type="submit" className="btn btn-outline-success">
-							<i className="fas fa-plus me-2"></i>Thêm thao tác
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
+		</>
 	);
 };
 

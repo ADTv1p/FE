@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import DescriptionStep from "./DescriptionStep";
 import processService from "../../../services/processService";
 import positionService from "../../../services/positionService";
+import { AddButton } from "../../common/ActionButtons";
 
 const TOOL_OPTIONS = [
 	{ value: "", label: "-- Không chọn --" },
@@ -168,9 +169,9 @@ const AddPosition = () => {
 
 					{/* Nút submit */}
 					<div className="col-12 d-grid">
-						<button type="submit" className="btn btn-outline-success">
+						<AddButton type="submit">
 							Thêm vị trí
-						</button>
+						</AddButton>
 					</div>
 				</form>
 			</div>

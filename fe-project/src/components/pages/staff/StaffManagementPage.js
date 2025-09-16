@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import StaffTable from "./StaffTable";
 import staffService from "../../../services/staffService";
 import { toast } from "react-toastify";
+import { SearchButton } from "../../common/ActionButtons";
 
 const StaffManagement = () => {
 	const [staffs, setStaffs] = useState([]);
@@ -117,9 +118,7 @@ const StaffManagement = () => {
 							</select>
 						</div>
 						<div className="col-12">
-							<button type="submit" className="btn btn-primary">
-								Tìm kiếm
-							</button>
+							<SearchButton type="submit">Tìm kiếm</SearchButton>
 						</div>
 					</form>
 				</div>

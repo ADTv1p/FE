@@ -1,5 +1,6 @@
 // PositionTable.js
 import React from "react";
+import { DeleteButton, DetailButton, EditButton } from "../../common/ActionButtons";
 
 const PositionTable = ({ positions, onView }) => {
 	return (
@@ -26,14 +27,15 @@ const PositionTable = ({ positions, onView }) => {
 								{p.process?.description || "—"}
 							</td>
 							<td>
-								<button
-									className="btn btn-sm btn-info me-2"
+								<DetailButton
+									size="small"
+									className="me-2"
 									onClick={() => onView(p)}
 								>
 									Xem
-								</button>
-								<button className="btn btn-sm btn-primary me-2">Sửa</button>
-								<button className="btn btn-sm btn-danger">Xóa</button>
+								</DetailButton>
+								<EditButton className="me-2" size="small">Sửa</EditButton>
+								<DeleteButton size="small">Xóa</DeleteButton>
 							</td>
 						</tr>
 					))

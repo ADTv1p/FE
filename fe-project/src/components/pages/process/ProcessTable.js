@@ -1,12 +1,14 @@
+import { DeleteButton, DetailButton } from "../../common/ActionButtons";
+
 const ProcessTable = ({ processes, onView, onDelete }) => {
 	return (
 		<table className="table table-striped table-bordered">
 			<thead>
 				<tr>
-					<th>Mã thao tác</th>
-					<th>Tên thao tác</th>
-					<th>Mô tả</th>
-					<th>Hành động</th>
+					<th scope="col">Mã thao tác</th>
+					<th scope="col">Tên thao tác</th>
+					<th scope="col">Mô tả</th>
+					<th scope="col" style={{ minWidth: "120px" }}>Hành động</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -16,19 +18,16 @@ const ProcessTable = ({ processes, onView, onDelete }) => {
 							<td>{p.process_id}</td>
 							<td>{p.name}</td>
 							<td>{p.description}</td>
-							<td>
-								<button
-									className="btn btn-sm btn-info me-2"
+							<td style={{ whiteSpace: "nowrap" }}>
+								<DetailButton
+									size="sm"
+									className="me-1"
 									onClick={() => onView?.(p)}
-								>
-									Xem
-								</button>
-								<button
-									className="btn btn-sm btn-danger"
+								/>
+								<DeleteButton
+									size="sm"
 									onClick={() => onDelete?.(p.process_id)}
-								>
-									Xóa
-								</button>
+								/>
 							</td>
 						</tr>
 					))

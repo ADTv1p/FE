@@ -1,5 +1,5 @@
-// src/components/accessories/AddAccessory.jsx
-import React, { useState } from "react";
+import	{ useState } from 'react';
+import { AddButton, ConfirmButton, CloseButton, DeleteButton, EditButton } from '../../common/ActionButtons';
 
 const AddAccessory = ({ onSubmit, onClose }) => {
 	const [formData, setFormData] = useState({
@@ -22,13 +22,7 @@ const AddAccessory = ({ onSubmit, onClose }) => {
 		<div className="card shadow-sm border-0 mb-4">
 			<div className="card-header d-flex justify-content-between align-items-center py-2 bg-light">
 				<p className="lead fs-5 mb-0">Thêm phụ kiện mới</p>
-				<button
-					type="button"
-					className="btn btn-sm btn-outline-secondary"
-					onClick={onClose}
-				>
-					<i className="fas fa-times me-1"></i>Đóng
-				</button>
+				<CloseButton size='small'onClick={onClose} />
 			</div>
 			<div className="card-body p-3">
 				<form onSubmit={handleSubmit} className="row g-3">
@@ -57,9 +51,9 @@ const AddAccessory = ({ onSubmit, onClose }) => {
 					</div>
 
 					<div className="col-12 d-grid mt-3">
-						<button type="submit" className="btn btn-outline-success">
-							<i className="fas fa-plus me-2"></i>Thêm phụ kiện
-						</button>
+						<ConfirmButton type="submit" disabled={!formData?.name || !formData?.type}>
+							Thêm phụ kiện
+						</ConfirmButton>
 					</div>
 				</form>
 			</div>

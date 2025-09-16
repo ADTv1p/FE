@@ -1,5 +1,6 @@
 // src/components/accessories/UpdateAccessory.jsx
 import React, { useState, useEffect } from "react";
+import { AddButton, ConfirmButton, CloseButton, DeleteButton, EditButton } from '../../common/ActionButtons';
 
 const UpdateAccessory = ({ accessory, onSubmit, onClose }) => {
 	const [formData, setFormData] = useState({ name: "", type: "" });
@@ -28,9 +29,7 @@ const UpdateAccessory = ({ accessory, onSubmit, onClose }) => {
 		<div className="card shadow-sm border-0 mb-4">
 			<div className="card-header d-flex justify-content-between align-items-center py-2 bg-light">
 				<h5 className="mb-0">Cập nhật phụ kiện</h5>
-				<button type="button" className="btn btn-sm btn-outline-secondary" onClick={onClose}>
-					<i className="fas fa-times me-1"></i>Đóng
-				</button>
+				<CloseButton size="small" onClick={onClose} />
 			</div>
 
 			<div className="card-body">
@@ -59,16 +58,15 @@ const UpdateAccessory = ({ accessory, onSubmit, onClose }) => {
 					</div>
 
 					<div className="col-12 d-grid">
-						<button
+						<ConfirmButton
                             type="submit"
-                            className="btn btn-outline-primary"
                             disabled={
                                 formData.name === accessory.name &&
                                 formData.type === (accessory.type || "")
                             }
                         >
                             Lưu thay đổi
-                        </button>
+                        </ConfirmButton>
 					</div>
 				</form>
 			</div>
