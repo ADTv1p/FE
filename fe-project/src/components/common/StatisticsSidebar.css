@@ -1,0 +1,37 @@
+.stats-link {
+  display: block;
+  color: #0d6efd;
+  text-decoration: none;
+  background-color: transparent;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.stats-nav {
+  padding-left: 0; /* loại bỏ padding mặc định của ul */
+  margin: 0;        /* reset margin nếu có */
+}
+
+.stats-item {
+  list-style: none; /* loại bỏ dấu chấm */
+  padding-left: 0;  /* reset padding mặc định của li */
+  margin: 0;        /* reset margin nếu muốn */
+}
+
+
+.stats-link:hover {
+  background-color: #e9ecef;
+  color: #0d6efd;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style cho link đang active */
+.stats-link.active {
+  background: linear-gradient(135deg, #07b2a9 0%, #1b82f0 100%);
+  color: #fff;
+  font-weight: 600;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(13, 110, 253, 0.3);
+  border-radius: 6px;
+}

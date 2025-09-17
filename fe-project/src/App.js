@@ -31,6 +31,7 @@ function App() {
 					<Route path="/chi-tiet-loi/:work_record_id" element={<ReportErrorDetail />} />
 					<Route path="/bao-cao-loi" element={<ReportError />} />
 					<Route path="/thong-ke-loi" element={<ErrorStatistics />} />
+					<Route path="/thong-ke-thao-tac" element={<ErrorStatistics />} />
 				</Routes>
 
 				<ToastContainer
