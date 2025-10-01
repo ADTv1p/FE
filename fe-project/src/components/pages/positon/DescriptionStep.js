@@ -6,8 +6,8 @@ const DescriptionStep = ({ process }) => {
             {process.steps?.length > 0 ? (
                 process.steps.map((step) => (
                     <li key={step.process_step_id} className="list-group-item">
-                        <span className="fw-semibold">Bước {step.step_order}. {step.step_name}: </span>
-                        {step.instruction || "Không có hướng dẫn"}
+                        <p className="m-0 fw-semibold">Bước {step.step_order}. {step.step_name}: </p>
+                        <p className="m-0">{step.instruction || "Không có hướng dẫn"}</p>
                     </li>
                 ))
             ) : (

@@ -1,10 +1,11 @@
 .stats-link {
   display: block;
-  color: #0d6efd;
+  color: #02437D;
   text-decoration: none;
   background-color: transparent;
   border-radius: 0.25rem;
-  transition: background-color 0.2s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+  border: 1px solid #02447d00;
+  transition: background-color 0.2s, color 0.3s ease-in-out, transform 0.3s ease-in-out, border 0.3s ease-in-out;
 }
 
 .stats-nav {
@@ -20,18 +21,17 @@
 
 
 .stats-link:hover {
-  background-color: #e9ecef;
-  color: #0d6efd;
+  background-color: transparent;
+  color: #F1C143;
+  border: 1px solid #02437D;
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Style cho link đang active */
 .stats-link.active {
-  background: linear-gradient(135deg, #07b2a9 0%, #1b82f0 100%);
-  color: #fff;
+  background-color: #02437D;
+  color: #F1C143;
   font-weight: 600;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(13, 110, 253, 0.3);
   border-radius: 6px;
 }

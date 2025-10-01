@@ -30,8 +30,19 @@ const createProcessStep = async (data) => {
 	}
 };
 
+const deleteProcessStep = async (process_step_id) => {
+	try {
+		const response = await axios.delete(`/process-steps/${process_step_id}`);
+		return response;
+	} catch (error) {
+		console.error("Lỗi khi gọi API POST /api/process-steps/create:", error);
+		throw error;
+	}
+};
+
 export default { 
 	getAllProcessSteps,
     getProcessStepInfo,
-    createProcessStep 
+    createProcessStep,
+    deleteProcessStep
 };

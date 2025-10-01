@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { Equalizer } from '@mui/icons-material';
 import "./StatisticsSidebar.css";
 
 const StatisticsSidebar = () => {
@@ -11,21 +12,22 @@ const StatisticsSidebar = () => {
 
 	return (
 		<div
-            className="card shadow-sm border-0 p-3 h-100"
-            style={{ width: "250px" }} 
+            className="card shadow-sm h-100" 
+            style={{ minWidth: "250px",maxWidth: "300px", backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}
         >
-            <div className="card-body p-0">
-                <ul className="stats-nav flex-column mb-auto">
+            <div className="card-body">
+                <ul className="stats-nav d-flex flex-column mb-auto gap-2">
                     {statisticsLinks.map((link, index) => (
-                        <li className="stats-item mb-1" key={index}>
+                        <li className="stats-item" key={index}>
                             <NavLink
                                 to={link.path}
                                 className={`stats-link d-flex align-items-center rounded-3 py-2 px-3 ${
                                     location.pathname === link.path
-                                        ? "active bg-primary text-white"
-                                        : "text-dark"
+                                        ? "activex text-white"
+                                        : ""
                                 }`}
                             >
+                                <Equalizer fontSize="medium" />
                                 <span className="me-2">{link.icon}</span>
                                 <span>{link.name}</span>
                             </NavLink>

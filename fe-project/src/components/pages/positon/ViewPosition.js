@@ -1,73 +1,69 @@
-import { AddButton, CloseButton, DeleteButton, EditButton } from "../../common/ActionButtons";
+import { CloseButton, DeleteButton, EditButton, DetailButton  } from "../../common/ActionButtons";
+import { useNavigate } from "react-router-dom";
 
-const ViewPosition = ({ position, onClose, onAddStep }) => {
-	if (!position?.process) return null;
+const ViewPosition = ({ position, onClose }) => {
+    const navigate = useNavigate();
+    if (!position) {
+        return <div className="card p-3 text-center text-muted">Không tìm thấy thông tin vị trí.</div>;
+    }
+    // --- Định nghĩa hàm InfoLabel (Nếu chưa có) ---
+    const InfoLabel = ({ label, value }) => (
+        <div className="d-flex align-items-center mb-1" style={{ color: "#F1C143" }}>
+            <span className="d-inline-block fw-semibold w-50 rounded">{label}:</span>
+            <span>{value}</span>
+        </div>
+    );
 
-	const { process } = position;
+    // ---------------------------------------------
+    
+    // Hàm tiện ích để định dạng ngày tháng
+    const formatDate = (dateString) => {
+        if (!dateString) return "Không có";
+        const options = { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        };
+        return new Date(dateString).toLocaleDateString('vi-VN', options);
+    };
 
-	return (
-		<div className="card shadow-sm border">
-			<div className="card-header d-flex justify-content-between align-items-center py-2 bg-light">
-				<p className="lead fs-5 mb-0">Chi tiết thao tác</p>
-				<CloseButton
-				size="small"
-					onClick={onClose}
-				/>
-			</div>
-
-			<div className="card-body p-3">
-				<div className="mb-3">
-					<label className="form-label fw-semibold">Tên thao tác</label>
-					<p className="form-control-plaintext">{process.name}</p>
-				</div>
-
-				<div className="mb-3">
-					<label className="form-label fw-semibold">Mô tả</label>
-					<p className="form-control-plaintext">{process.description}</p>
-				</div>
-
-				<hr />
-				<h6 className="fw-bold mb-2">Danh sách bước</h6>
-				<table className="table table-sm table-bordered">
-					<thead className="table-light">
-						<tr>
-							<th>Thứ tự</th>
-							<th>Tên bước</th>
-							<th>Hành động</th>
-						</tr>
-					</thead>
-					<tbody>
-						{process.steps?.length > 0 ? (
-							process.steps.map((step, index) => (
-								<tr key={step.process_step_id}>
-									<td>{step.step_order}</td>
-									<td>{step.step_name}</td>
-									<td>
-										<EditButton size="small" className="me-2">Sửa</EditButton>
-										<DeleteButton size="small">Xóa</DeleteButton>
-									</td>
-								</tr>
-							))
-						) : (
-							<tr>
-								<td colSpan="4" className="text-center text-muted">
-									Chưa có bước nào
-								</td>
-							</tr>
-						)}
-					</tbody>
-				</table>
-
-				<div className="d-grid mt-3">
-					<AddButton
-						onClick={() => onAddStep?.(process)}
-					>
-						Thêm bước cho thao tác
-					</AddButton>
-				</div>
-			</div>
-		</div>
-	);
+    return (
+        <div className="card shadow-sm" style={{ backgroundColor: "#02437D", color: "#fff", borderColor: "transparent" }}>
+            <div className="card-body">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h5 className="card-title fw-bold">Thông tin Vị trí</h5>
+                    <CloseButton size="small" onClick={onClose} />
+                </div>
+                <div className="py-3">
+                    <h5>Thông tin</h5>
+                    <InfoLabel label="Mã vị trí" value={position.code} />
+                    <InfoLabel label="Vai trò" value={position.role} />
+                    <InfoLabel label="Công cụ" value={position.tools} />
+                    <div className="text-end">
+                        <DetailButton onClick={() => navigate(`/quan-ly-nhan-su?position_code=${position.code}`)}>Danh sách nhân sự</ DetailButton>
+                    </div>
+                    
+                    <div className="border-top pt-3">
+                        <h5>Thao tác liên quan</h5>
+                        <InfoLabel label="Tên Thao tác" value={position.process?.name || "Không xác định"} />
+                        <InfoLabel label="Mô tả" value={position.process?.description || "Chưa có mô tả"} />
+                        
+                        <div className="py-2 text-end small">
+                            <div className="mb-1">Ngày tạo: {formatDate(position.process?.createdAt)}</div>
+                            <div className="mb-1">Cập nhật cuối: {formatDate(position.process?.updatedAt)}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="d-flex justify-content-end gap-2 border-top py-3">
+                    <EditButton>Sửa Vị trí</EditButton>
+                    <DeleteButton>Xóa Vị trí</DeleteButton>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default ViewPosition;

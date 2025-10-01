@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+.modal.fade {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.modal.fade.show {
+    opacity: 1;
+}
+
+.modal-dialog {
+    transform: scale(0.8);
+    transition: transform 0.3s ease-in-out;
+}
+
+.modal.fade.show .modal-dialog {
+    transform: scale(1);
+}
+
+.modal-content {
+    transition: none;
+}

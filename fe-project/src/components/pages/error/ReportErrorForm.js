@@ -60,43 +60,39 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
     };
 
 	return (
-		<div className="card shadow-sm border-0">
+        <div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
 			<div className="card-body">
 				<form onSubmit={handleSubmit} className="row g-3">
                     <div className="col">
-                        <div className="p-4 border rounded bg-light h-100">
-                            <p className="fw-bold mb-3 text-primary">Chọn đơn công việc có sẵn:</p>
-                            <div className="d-flex flex-wrap gap-2">
-                                {workOrders.length > 0 ? (
-                                    workOrders.map((wo) => (
-                                        <div key={wo.work_order_id} className="d-flex flex-column align-items-start mb-3">
-                                            <button
-                                                type="button"
-                                                className={`btn btn-sm ${
-                                                    formData.work_order_id === wo.work_order_id
-                                                        ? "btn-primary"
-                                                        : "btn-outline-primary"
-                                                } rounded-pill px-3 mb-2`}
-                                                onClick={() => handleSelectWorkOrder(wo.work_order_id)}
-                                            >
-                                                {wo.description}
-                                            </button>
-                                            <div className="ms-2">
-                                                <small className="text-muted d-block">Trạng thái: {wo.status}</small>
-                                                <small className="text-muted d-block">Mô tả: {wo.description}</small>
-                                                <small className="text-muted d-block">Trạng thái: {wo.status}</small>
-                                                <small className="text-muted d-block">
-                                                    Thời gian bắt đầu: {wo.start_time ? new Date(wo.start_time).toLocaleString() : 'Chưa xác định'}
-                                                </small>
-                                                <small className="text-muted d-block">
-                                                    Thời gian kết thúc: {wo.end_time ? new Date(wo.end_time).toLocaleString() : 'Chưa xác định'}
-                                                </small>
+                        <div className="card shadow-sm h-100" style={{ backgroundColor: "#02437D", color: "#fff", borderColor: "transparent" }}>
+                            <div className="card-body">
+                                <h5 className="card-title fw-bold mb-3">Chọn đơn công việc có sẵn:</h5>
+                                <div className="d-flex flex-wrap gap-2">
+                                    {workOrders.length > 0 ? (
+                                        workOrders.map((wo) => (
+                                            <div key={wo.work_order_id} className="d-flex flex-column align-items-start mb-3">
+                                                <AddButton 
+                                                    style={{ backgroundColor: formData.work_order_id === wo.work_order_id ? "#F1C143" : "" }}
+                                                    onClick={() => handleSelectWorkOrder(wo.work_order_id)} >{wo.description}
+                                                </AddButton>
+
+                                                <div className="mt-2">
+                                                    <small className="d-block">Trạng thái: {wo.status}</small>
+                                                    <small className="d-block">Mô tả: {wo.description}</small>
+                                                    <small className="d-block">Trạng thái: {wo.status}</small>
+                                                    <small className="d-block">
+                                                        Thời gian bắt đầu: {wo.start_time ? new Date(wo.start_time).toLocaleString() : 'Chưa xác định'}
+                                                    </small>
+                                                    <small className="d-block">
+                                                        Thời gian kết thúc: {wo.end_time ? new Date(wo.end_time).toLocaleString() : 'Chưa xác định'}
+                                                    </small>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <small className="text-muted">Không có đơn công việc nào</small>
-                                )}
+                                        ))
+                                    ) : (
+                                        <small className="text-muted">Không có đơn công việc nào</small>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -199,36 +195,38 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                     </div>
                     {/* Cột danh sách lỗi */}
                     <div className="col">
-                        <div className="p-4 border rounded bg-light h-100">
-                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                <p className="m-0 fw-bold text-primary">Chọn lỗi có sẵn:</p>
-                                <AddButton
-                                    onClick={onShowAddError}
-                                >
-                                    Thêm lỗi mới
-                                </AddButton>
-                            </div>
-                            <div className="d-flex flex-wrap gap-2">
-                                {errors.length > 0 ? (
-                                    errors.map((err) => (
-                                        <div key={err.error_id} className="d-flex flex-column align-items-start">
-                                            <button
-                                                type="button"
-                                                className={`btn btn-sm ${
-                                                    formData.error_id === err.error_id
-                                                        ? "btn-danger"
-                                                        : "btn-outline-danger"
-                                                } rounded-pill px-3 mb-1`}
-                                                onClick={() => handleSelectError(err.error_id)}
-                                            >
-                                                {err.name}
-                                            </button>
-                                            <small className="text-muted ms-2">{err.description}</small>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <small className="text-muted">Không có lỗi nào</small>
-                                )}
+                        <div className="card shadow-sm h-100" style={{ backgroundColor: "#F1C143", color: "#02437D", borderColor: "transparent" }}>
+                            <div className="card-body">
+                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 className="card-title fw-bold">Chọn lỗi có sẵn:</h5>
+                                    <AddButton
+                                        onClick={onShowAddError}
+                                    >
+                                        Thêm lỗi mới
+                                    </AddButton>
+                                </div>
+                                <div className="d-flex flex-wrap gap-2">
+                                    {errors.length > 0 ? (
+                                        errors.map((err) => (
+                                            <div key={err.error_id} className="d-flex flex-column align-items-start">
+                                                <button
+                                                    type="button"
+                                                    className={`btn btn-sm ${
+                                                        formData.error_id === err.error_id
+                                                            ? "btn-danger"
+                                                            : "btn-outline-danger"
+                                                    } rounded px-3 mb-1`}
+                                                    onClick={() => handleSelectError(err.error_id)}
+                                                >
+                                                    {err.name}
+                                                </button>
+                                                <small className="ms-2">{err.description}</small>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <small className="">Không có lỗi nào</small>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -237,13 +235,9 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                         <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                             <div className="modal-dialog modal-dialog-centered">
                                 <div className="modal-content">
-                                    <div className="modal-header">
+                                    <div className="modal-header py-2" style={{ backgroundColor: "#02437D", color: "#fff" }}>
                                         <h5 className="modal-title">Chọn vị trí</h5>
-                                        <button
-                                            type="button"
-                                            className="btn-close border"
-                                            onClick={() => setShowPositionModal(false)}
-                                        ></button>
+                                        <CloseButton size="small" className="btn-close" onClick={() => setShowPositionModal(false)} />
                                     </div>
                                     <div className="modal-body">
                                         {positions.length > 0 ? (
@@ -255,17 +249,17 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                                                                 type="button"
                                                                 className={`btn btn-sm ${
                                                                     positionSelected && positionSelected.position_id === pos.position_id
-                                                                        ? "btn-success"
-                                                                        : "btn-outline-success"
-                                                                } rounded-pill px-4 w-100`}
+                                                                        ? "btn-primary"
+                                                                        : "btn-outline-primary"
+                                                                } rounded px-4 w-100`}
                                                                 onClick={() => handleSelectPosition(pos)}
                                                             >
                                                                 {pos.code}
                                                             </button>
                                                         </div>
                                                         <div className="ms-3 flex-grow-1">
-                                                            <small className="text-muted d-block fw-semibold">Mã: {pos.code}</small>
-                                                            <small className="text-muted d-block">Vai trò: {pos.role}</small>
+                                                            <small className="d-block fw-semibold">Mã: {pos.code}</small>
+                                                            <small className="d-block">Vai trò: {pos.role}</small>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -275,13 +269,7 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                                         )}
                                     </div>
                                     <div className="modal-footer">
-                                        <button
-                                            type="button"
-                                            className="btn btn-sm btn-outline-secondary rounded-pill"
-                                            onClick={() => setShowPositionModal(false)}
-                                        >
-                                            Đóng
-                                        </button>
+                                        <CloseButton type="button" onClick={() => setShowPositionModal(false)} />       
                                     </div>
                                 </div>
                             </div>
@@ -292,13 +280,9 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                         <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                             <div className="modal-dialog modal-dialog-centered">
                                 <div className="modal-content">
-                                    <div className="modal-header">
+                                    <div className="modal-header py-2" style={{ backgroundColor: "#02437D", color: "#fff" }}>
                                         <h5 className="modal-title">Chọn người thao tác lỗi</h5>
-                                        <button
-                                            type="button"
-                                            className="btn-close border"
-                                            onClick={() => setShowStaffModal(false)}
-                                        ></button>
+                                        <CloseButton size="small" className="btn-close" onClick={() => setShowStaffModal(false)}/>
                                     </div>
                                     <div className="modal-body">
                                         <div className="d-flex flex-column gap-3">
@@ -310,22 +294,22 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                                                                 type="button"
                                                                 className={`btn btn-sm ${
                                                                     formData.staff_id === s.staff_id
-                                                                        ? "btn-success"
-                                                                        : "btn-outline-success"
-                                                                } rounded-pill px-4 w-100`}
+                                                                        ? "btn-primary"
+                                                                        : "btn-outline-primary"
+                                                                } rounded px-4 w-100`}
                                                                 onClick={() => handleSelectStaff(s.staff_id)}
                                                             >
                                                                 Chọn
                                                             </button>
                                                         </div>
                                                         <div className="ms-3 flex-grow-1">
-                                                            <small className="text-muted d-block">Tên: {s.full_name}</small>
-                                                            <small className="text-muted d-block fw-semibold">Phòng ban: {s.department}</small>
+                                                            <small className=" d-block">Tên: {s.full_name}</small>
+                                                            <small className=" d-block fw-semibold">Phòng ban: {s.department}</small>
                                                         </div>
                                                     </div>
                                                 ))
                                             ) : (
-                                                <div className="text-center text-muted p-3 border rounded bg-light">
+                                                <div className="text-center  p-3 border rounded bg-light">
                                                     Không có nhân viên nào được tìm thấy.
                                                 </div>
                                             )}

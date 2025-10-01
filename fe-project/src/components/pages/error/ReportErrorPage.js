@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import AddError from "./AddError";
+import { Report } from '@mui/icons-material';
+import { BackButton } from "../../common/ActionButtons";
+import { Typography } from '@mui/material';
+import AddErrorModal from "./AddErrorModal";
 import ReportErrorForm from "./ReportErrorForm";
 import errorService from "../../../services/errorService";
 import workOrderService from "../../../services/workOrderService";
@@ -102,14 +105,18 @@ const ReportError = () => {
 
 	return (
 		<div className="container">
-			<div className="card shadow-sm border-0 mb-2">
-				<div className="card-body text-center">
-					<h2 className="fs-2 lead">Báo cáo lỗi</h2>
-				</div>
-			</div>
+			<div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
+                <Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
+                    <Report fontSize="large" />
+                    BÁO CÁO LỖI
+                </Typography>
+				<BackButton onClick={() => window.history.back()}>
+					Quay lại
+				</BackButton>
+            </div>
 
 			{showFormAddError && (
-				<AddError
+				<AddErrorModal
 					onSubmit={handleAddError}
 					showFormAddError={setShowFormAddError}
 					onClose={() => setShowFormAddError(false)}

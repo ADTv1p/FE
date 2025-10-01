@@ -1,21 +1,28 @@
+import { Typography, Button } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const IfError = () => {
-    return (
-        <div className="container mt-5 text-center">
-            <p className="fs-5 text-danger d-flex justify-content-center align-items-center gap-2">
-                <ErrorOutlineIcon color="error" fontSize="large" />
-                Đã xảy ra lỗi khi tải dữ liệu.
-            </p>
-            <button
-                className="btn btn-outline-primary d-inline-flex align-items-center gap-2"
-                onClick={() => window.location.reload()}
-            >
-                <RefreshIcon fontSize="small" /> Tải lại trang
-            </button>
-        </div>
-    );
-}
+	return (
+		<div className="container mt-5 d-flex justify-content-center align-items-center">
+			<div className="text-center d-flex flex-column gap-3">
+                <div className="text-center">
+				   <ErrorOutlineIcon color="error" sx={{ fontSize: 60 }} />
+                </div>
+                    
+				<Typography variant="h4" color="error">
+					Đã xảy ra lỗi khi tải dữ liệu.
+				</Typography>
+                <Button
+                    variant="outlined"
+                    startIcon={<RefreshIcon />}
+                    onClick={() => window.location.reload()}
+                >
+                    Tải lại trang
+                </Button>
+			</div>
+		</div>
+	);
+};
 
 export default IfError;

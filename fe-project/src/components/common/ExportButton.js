@@ -1,16 +1,7 @@
 import './ExportButton.css';
 import GetAppIcon from '@mui/icons-material/GetApp';
 
-const ExportButton = ({ 
-  children, 
-  type = 'button', 
-  variant = 'primary', 
-  size = 'medium', 
-  onClick, 
-  disabled = false, 
-  className = '', 
-  style = {},
-}) => {
+const ExportButton = ({ children, type = 'button', variant = 'primary', size = 'medium', onClick, disabled = false, className = '', style = {},}) => {
   return (
     <button
       type={type}

@@ -4,21 +4,27 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 12px;
   border: 1px solid transparent;
   border-radius: 6px;
-  font-weight: 400;
+  font-weight: 560;
   color: #333;
   background-color: #f8f9fa;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
 .custom-btn:hover {
-  background-color: #e9ecef;
-  border-color: #dee2e6;
+  background-color: #02437D;
+  color: #F1C143;
+  border-color: #F1C143;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transform: translateY(-3px);
+
 }
 
 .custom-btn:disabled {
@@ -61,7 +67,3 @@
   font-size: 18px;
 }
 
-.btn-icon {
-  display: inline-flex;
-  align-items: center;
-}

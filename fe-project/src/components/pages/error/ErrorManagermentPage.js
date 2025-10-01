@@ -5,6 +5,9 @@ import ReportErrorList from "./ReportErrorList";
 import ReportFilter from "./ReportFilter";
 import ExportButton from "../../common/ExportButton";
 import exportWorkRecordsToExcel from "../../utils/export/exportWorkRecordsToExcel";
+import { BackButton } from "../../common/ActionButtons";
+import { Typography } from "@mui/material";
+import { Report } from "@mui/icons-material";
 
 const ErrorManagement = () => {
     const [workRecords, setWorkRecords] = useState([]);
@@ -49,20 +52,25 @@ const ErrorManagement = () => {
 
     return (
         <div className="container">
-            <div className="card shadow-sm border-0 mb-2">
-                <div className="card-body d-flex justify-content-between align-items-center">
-                    <h2 className="fs-2 lead mb-0">Quản lý lỗi</h2>
-                    <div>
-                        <ExportButton
-                            className="me-2"
-                            disabled={!filteredWorkRecord || filteredWorkRecord.length === 0}
-                            onClick={() => handleExportReport(filteredWorkRecord)}
-                            >
-                            Xuất Danh Sách Báo Cáo
-                        </ExportButton>
-                    </div>
+            <div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
+                <Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
+                    <Report fontSize="large" />
+                    QUẢN LÝ LỖI
+                </Typography>
+                 <div>
+                    <ExportButton
+                        className="me-2"
+                        disabled={!filteredWorkRecord || filteredWorkRecord.length === 0}
+                        onClick={() => handleExportReport(filteredWorkRecord)}
+                        >
+                        Xuất Danh Sách Báo Cáo
+                    </ExportButton>
+                    <BackButton onClick={() => window.history.back()}>
+                        Quay lại
+                    </BackButton>
                 </div>
             </div>
+            
             <div className="row g-3">
                 <div className="col-9">
                     <ReportErrorList workRecordList={filteredWorkRecord} />

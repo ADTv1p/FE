@@ -1,10 +1,9 @@
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 import { saveAs } from "file-saver";
 
 const exportWorkRecordsToExcel = (workRecords, fileName = "BaoCaoLoi.xlsx") => {
-	if (!workRecords || workRecords.length === 0) return;
+	if (!Array.isArray(workRecords) || workRecords.length === 0) return;
 
-	// Chuyển dữ liệu sang định dạng Excel
 	const data = workRecords.map(record => ({
 		"ID báo cáo lỗi": record.work_record_id,
 		"Ghi chú": record.note,
@@ -29,6 +28,37 @@ const exportWorkRecordsToExcel = (workRecords, fileName = "BaoCaoLoi.xlsx") => {
 	}));
 
 	const worksheet = XLSX.utils.json_to_sheet(data);
+
+	// Style header: in đậm, nền xám nhạt
+	const headerKeys = Object.keys(data[0]);
+	headerKeys.forEach((col, colIdx) => {
+		const cellAddress = XLSX.utils.encode_cell({ r: 0, c: colIdx }); // dòng 0 = header
+		if (worksheet[cellAddress]) {
+			worksheet[cellAddress].s = {
+				font: { bold: true, color: { rgb: "000000" } },
+				fill: { patternType: "solid", fgColor: { rgb: "DDDDDD" } },
+				alignment: { horizontal: "center", vertical: "center" },
+			};
+		}
+	});
+
+	// Highlight đỏ nhạt nếu ghi chú chứa "nghiêm trọng"
+	workRecords.forEach((record, rowIdx) => {
+		if (record.note && record.note.toLowerCase().includes("lỗi")) {
+			const excelRow = rowIdx + 2; // +2 vì header chiếm dòng 1
+			headerKeys.forEach((_, colIdx) => {
+				const cellAddress = XLSX.utils.encode_cell({ r: excelRow - 1, c: colIdx });
+				if (!worksheet[cellAddress]) return;
+				worksheet[cellAddress].s = {
+					fill: {
+						patternType: "solid",
+						fgColor: { rgb: "FFEBEB" }, // đỏ nhạt
+					},
+				};
+			});
+		}
+	});
+
 	const workbook = XLSX.utils.book_new();
 	XLSX.utils.book_append_sheet(workbook, worksheet, "BaoCaoLoi");
 
@@ -37,4 +67,4 @@ const exportWorkRecordsToExcel = (workRecords, fileName = "BaoCaoLoi.xlsx") => {
 	saveAs(blob, fileName);
 };
 
-export default exportWorkRecordsToExcel
+export default exportWorkRecordsToExcel;

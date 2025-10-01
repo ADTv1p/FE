@@ -3,7 +3,9 @@ import { toast } from "react-toastify";
 import DescriptionStep from "./DescriptionStep";
 import processService from "../../../services/processService";
 import positionService from "../../../services/positionService";
-import { AddButton } from "../../common/ActionButtons";
+import { BackButton, ConfirmButton } from "../../common/ActionButtons";
+import { Typography, TextField, MenuItem, Button } from "@mui/material";
+import { PanToolRounded } from "@mui/icons-material";
 
 const TOOL_OPTIONS = [
 	{ value: "", label: "-- Không chọn --" },
@@ -80,100 +82,113 @@ const AddPosition = () => {
 
 
 	return (
-		<div className="card shadow-sm border-0 mb-4">
-			<div className="card-header d-flex justify-content-between align-items-center py-2 bg-light">
-				<p className="lead fs-5 mb-0">Thêm vị trí</p>
+		<div className="container">
+			<div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
+				<Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
+					<PanToolRounded fontSize="large" />
+					THÊM VỊ TRÍ
+				</Typography>
+				<div>
+					<BackButton onClick={() => window.history.back()}>
+						Quay lại
+					</BackButton>
+				</div>
 			</div>
 
-			<div className="card-body p-3">
-				<form onSubmit={handleSubmit} className="row g-3">
-					{/* Cột trái */}
-					<div className="col-md-3">
-						{/* Mã vị trí */}
-						<div className="mb-3">
-							<label className="form-label fw-semibold">Mã vị trí</label>
-							<input
-								type="text"
+			<div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
+				<div className="card-body">
+					<form onSubmit={handleSubmit} className="row g-3">
+						{/* Cột trái */}
+						<div className="col-md-3">
+							{/* Mã vị trí */}
+							<TextField
 								name="code"
-								className="form-control"
+								label="Mã vị trí"
 								placeholder="Nhập mã vị trí"
 								value={formData.code}
 								onChange={handleChange}
 								required
+								fullWidth
+								margin="normal"
 							/>
-						</div>
 
-						{/* Vai trò */}
-						<div className="mb-3">
-							<label className="form-label fw-semibold">Vai trò</label>
-							<select
+							{/* Vai trò */}
+							<TextField
 								name="role"
-								className="form-select"
+								label="Vai trò"
+								select
 								value={formData.role}
 								onChange={handleChange}
 								required
+								fullWidth
+								margin="normal"
 							>
 								{ROLE_OPTIONS.map((r) => (
-									<option key={r.value} value={r.value}>
+									<MenuItem key={r.value} value={r.value}>
 										{r.label}
-									</option>
+									</MenuItem>
 								))}
-							</select>
-						</div>
+							</TextField>
 
-						{/* Dụng cụ */}
-						<div className="mb-3">
-							<label className="form-label fw-semibold">Dụng cụ</label>
-							<select
+							{/* Dụng cụ */}
+							<TextField
 								name="tools"
-								className="form-select"
+								label="Dụng cụ"
+								select
 								value={formData.tools}
 								onChange={handleChange}
+								fullWidth
+								margin="normal"
 							>
 								{TOOL_OPTIONS.map((t) => (
-									<option key={t.value} value={t.value}>
+									<MenuItem key={t.value} value={t.value}>
 										{t.label}
-									</option>
+									</MenuItem>
 								))}
-							</select>
+							</TextField>
 						</div>
-					</div>
 
-					{/* Cột giữa: Chọn thao tác */}
-					<div className="col-md-4">
-						<label className="form-label fw-semibold">Chọn Thao tác</label>
-						<div className="d-flex flex-column gap-2">
-							{processes.map((p) => (
-								<button
-									type="button"
-									key={p.process_id}
-									className={`btn ${
-										formData.process_id === p.process_id
-											? "btn-primary"
-											: "btn-outline-secondary"
-									} text-start`}
-									onClick={() => handleSelectProcess(p)}
+						{/* Cột giữa: Chọn thao tác */}
+						<div className="col-md-4">
+							<label className="form-label fw-semibold">Chọn Thao tác</label>
+							<div className="d-flex flex-column gap-2">
+								{processes.map((p) => (
+									<Button
+									key={p.process_id} variant={formData.process_id === p.process_id ? "contained" : "outlined"}
+									onClick={() => handleSelectProcess(p)} fullWidth
+									sx={{
+										display: "flex",
+										flexDirection: "column",
+										alignItems: "flex-start",
+										backgroundColor: formData.process_id === p.process_id ? "#02437D" : undefined,
+										color: formData.process_id === p.process_id ? "#ffffff" : undefined,
+										"&:hover": {
+											backgroundColor: formData.process_id === p.process_id ? "#02437D" : undefined,
+										},
+									}}
 								>
-									<p className="mb-0 fw-semibold">{p.name}</p>
-									<small className="text-muted">{p.description}</small>
-								</button>
-							))}
+									<span className="fw-semibold">{p.name}</span>
+									<small className="">{p.description}</small>
+								</Button>
+
+								))}
+							</div>
 						</div>
-					</div>
 
-					{/* Cột phải: Hiển thị các bước thao tác */}
-					<div className="col-md-5">
-						<label className="form-label fw-semibold">Các bước của thao tác</label>
-						<DescriptionStep process={selectedProcess} />
-					</div>
+						{/* Cột phải: Hiển thị các bước thao tác */}
+						<div className="col-md-5">
+							<label className="form-label fw-semibold">Các bước của thao tác</label>
+							<DescriptionStep process={selectedProcess} />
+						</div>
 
-					{/* Nút submit */}
-					<div className="col-12 d-grid">
-						<AddButton type="submit">
-							Thêm vị trí
-						</AddButton>
-					</div>
-				</form>
+						{/* Nút submit */}
+						<div className="col-12 text-center">
+							<ConfirmButton size="large" type="submit">
+								Thêm vị trí
+							</ConfirmButton>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	);

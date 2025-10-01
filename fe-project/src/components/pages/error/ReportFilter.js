@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FilterButton } from '../../common/ActionButtons';
+import { TextField } from "@mui/material";
 
 const ReportFilter = ({ workRecordList, onFilter }) => {
     const [filterName, setFilterName] = useState('');
@@ -30,78 +31,23 @@ const ReportFilter = ({ workRecordList, onFilter }) => {
     }
 
 	return (
-		<div className="card shadow-sm border-0 mb-3">
-			<div className="card-body p-3">
-                <h6 className="text-primary mb-3">Lọc báo cáo lỗi<span className="badge bg-danger ms-2 rounded-circle">{workRecordList.length}</span></h6>
-                <div className="text-end">
-                <FilterButton onClick={() => handleClearFilter()}>
-                    Xóa bộ lọc
-                </FilterButton>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label fw-bold mb-1">Tên nhân viên</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Nhập tên nhân viên..."
-                        value={filterName}
-                        onChange={(e) => setFilterName(e.target.value)}
-                    />
-                </div>
-
-				<div className="mb-3">
-					<label className="form-label fw-bold mb-1">Số điện thoại</label>
-					<input
-						type="text"
-						className="form-control"
-						placeholder="Nhập số điện thoại..."
-						value={filterPhone}
-						onChange={(e) => setFilterPhone(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label className="form-label fw-bold mb-1">Email</label>
-					<input
-						type="text"
-						className="form-control"
-						placeholder="Nhập email..."
-						value={filterEmail}
-						onChange={(e) => setFilterEmail(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label className="form-label fw-bold mb-1">Ngày tạo</label>
-					<input
-						type="date"
-						className="form-control"
-						value={filterDate}
-						onChange={(e) => setFilterDate(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label className="form-label fw-bold mb-1">Tên lỗi</label>
-					<input
-						type="text"
-						className="form-control"
-						placeholder="Nhập tên lỗi..."
-						value={filterErrorName}
-						onChange={(e) => setFilterErrorName(e.target.value)}
-					/>
-				</div>
-
-				<div>
-					<label className="form-label fw-bold mb-1">Vai trò</label>
-					<input
-						type="text"
-						className="form-control"
-						placeholder="Nhập vai trò..."
-						value={filterRole}
-						onChange={(e) => setFilterRole(e.target.value)}
-					/>
-				</div>
+		<div className="card shadow-sm" style={{ borderColor: "#02437D" }}>
+			<div className="card-header fw-bold d-flex justify-content-between align-items-center" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
+				<>
+					<span>Lọc B/C lỗi</span>
+					<span className="badge bg-danger ms-2 rounded-circle">{workRecordList.length}</span>
+				</>
+				<FilterButton onClick={() => handleClearFilter()}>
+					Xóa bộ lọc
+				</FilterButton>
+			</div>
+			<div className="card-body" style={{ color: "#02437D" }}>
+				<TextField label="Tên nhân viên" variant="outlined" size="small" fullWidth className="mb-3" value={filterName} onChange={e => setFilterName(e.target.value)} />
+				<TextField label="Số điện thoại" variant="outlined" size="small" fullWidth className="mb-3" value={filterPhone} onChange={e => setFilterPhone(e.target.value)} />
+				<TextField label="Email" variant="outlined" size="small" fullWidth className="mb-3" value={filterEmail} onChange={e => setFilterEmail(e.target.value)} />
+				<TextField label="Ngày tạo" type="date" variant="outlined" size="small" fullWidth className="mb-3" value={filterDate} onChange={e => setFilterDate(e.target.value)} />
+				<TextField label="Tên lỗi" variant="outlined" size="small" fullWidth className="mb-3" value={filterErrorName} onChange={e => setFilterErrorName(e.target.value)} />
+				<TextField label="Vai trò" variant="outlined" size="small" fullWidth className="mb-3" value={filterRole} onChange={e => setFilterRole(e.target.value)} />
 			</div>
 		</div>
 	);

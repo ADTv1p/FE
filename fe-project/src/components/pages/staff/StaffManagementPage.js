@@ -1,127 +1,126 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import StaffTable from "./StaffTable";
+import StaffFilter from "./StaffFilter";
 import staffService from "../../../services/staffService";
 import { toast } from "react-toastify";
-import { SearchButton } from "../../common/ActionButtons";
+import { Typography } from "@mui/material";
+import { People } from '@mui/icons-material';
+import Pagination from "../../common/Pagination";
+import IfLoading from "../../common/IfLoading";
+import IfError from "../../common/IfError";
 
 const StaffManagement = () => {
+	const location = useLocation();
+	const params = new URLSearchParams(location.search);
+	const position_code = params.get("position_code");
+	const process_name = params.get("process_name");
+
+	const [allStaffs, setAllStaffs] = useState([]);
 	const [staffs, setStaffs] = useState([]);
+	const [search, setSearch] = useState({ 
+		name: "", 
+		position_code: position_code || "", 
+		status: "", 
+		process_name: process_name || ""
+	});
+
+	const [page, setPage] = useState(1);
+	const itemsPerPage = 10;
+
+	const paginatedStaffs = staffs.slice(
+		(page - 1) * itemsPerPage,
+		page * itemsPerPage
+	).map((item, index) => ({
+		...item,
+		stt: (page - 1) * itemsPerPage + index + 1 // Thêm STT
+	}));
+
+	const totalPages = Math.ceil(staffs.length / itemsPerPage);
+
+	const handlePageChange = (newPage) => setPage(newPage);
+
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		const fetchStaffs = async () => {
+			setLoading(true);
 			try {
 				const res = await staffService.getAllStaffs();
 				if (res?.EC === 0) {
+					setAllStaffs(res.DT);
 					setStaffs(res.DT);
 				} else {
 					toast.warn("Không có dữ liệu nhân sự!");
+					setStaffs([]);
+					setAllStaffs([]);
 				}
 			} catch (err) {
 				console.error("Lỗi tải nhân sự:", err);
 				toast.error("Lỗi khi tải danh sách nhân sự.");
+				setError(true);
+			} finally {
+				setLoading(false);
 			}
 		};
 		fetchStaffs();
 	}, []);
+	
+	useEffect(() => {
+		if ((position_code || process_name) && allStaffs.length > 0) {
+			setSearch(prev => ({ ...prev, position_code, process_name }));
+			const filtered = allStaffs.filter(staff =>
+				(!position_code || staff.position?.code?.toLowerCase().includes(position_code.toLowerCase())) &&
+				(!process_name || staff.position?.process?.name?.toLowerCase().includes(process_name.toLowerCase()))
+			);
+			setStaffs(filtered);
+		}
+	}, [position_code, process_name, allStaffs]);
+
+	// handleSearchChange
+	const handleSearchChange = (field, value) => {
+		setSearch(prev => {
+			const newSearch = { ...prev, [field]: value };
+			const filteredStaffs = allStaffs.filter(staff => {
+				const matchName = newSearch.name
+					? staff.full_name.toLowerCase().includes(newSearch.name.toLowerCase())
+					: true;
+				const matchPos = newSearch.position_code
+					? staff.position?.code?.toLowerCase().includes(newSearch.position_code.toLowerCase())
+					: true;
+				const matchStatus = newSearch.status
+					? (newSearch.status === "Đang làm" ? staff.status === "active" : staff.status !== "active")
+					: true;
+				const matchProcess = newSearch.process_name
+					? staff.position?.process?.name?.toLowerCase().includes(newSearch.process_name.toLowerCase())
+					: true;
+				return matchName && matchPos && matchStatus && matchProcess;
+			});
+			setStaffs(filteredStaffs);
+			return newSearch;
+		});
+	};
+
+	if (loading) return <IfLoading />;
+	if (error) return <IfError />;
+
 	return (
-		<div className="shadow-lg border-0 rounded-3 bg-white p-3">
-			<p className="lead fs-2 text-center">Quản lý nhân sự</p>
-			<hr/>
-			<ul className="nav nav-tabs" id="staffTabs" role="tablist">
-				<li className="nav-item" role="presentation">
-					<button
-						className="nav-link active"
-						id="list-tab"
-						data-bs-toggle="tab"
-						data-bs-target="#list"
-						type="button"
-						role="tab"
-					>
-						Danh sách nhân sự
-					</button>
-				</li>
-				<li className="nav-item" role="presentation">
-					<button
-						className="nav-link"
-						id="stats-tab"
-						data-bs-toggle="tab"
-						data-bs-target="#stats"
-						type="button"
-						role="tab"
-					>
-						Thống kê
-					</button>
-				</li>
-				<li className="nav-item" role="presentation">
-					<button
-						className="nav-link"
-						id="search-tab"
-						data-bs-toggle="tab"
-						data-bs-target="#search"
-						type="button"
-						role="tab"
-					>
-						Tìm kiếm nâng cao
-					</button>
-				</li>
-			</ul>
-
-			<div className="tab-content mt-3" id="staffTabsContent">
-				{/* Tab 1 - Danh sách nhân sự */}
-				<div className="tab-pane fade show active" id="list" role="tabpanel">
-					<StaffTable staffs={staffs} />
-				</div>
-
-				{/* Tab 2 - Thống kê */}
-				<div className="tab-pane fade" id="stats" role="tabpanel">
-					<div className="row text-center">
-						<div className="col-md-4">
-							<div className="card p-3 shadow-sm">
-								<h5>Tổng nhân sự</h5>
-								<p className="display-6 fw-bold text-primary">120</p>
-							</div>
-						</div>
-						<div className="col-md-4">
-							<div className="card p-3 shadow-sm">
-								<h5>Đang làm việc</h5>
-								<p className="display-6 fw-bold text-success">110</p>
-							</div>
-						</div>
-						<div className="col-md-4">
-							<div className="card p-3 shadow-sm">
-								<h5>Đã nghỉ việc</h5>
-								<p className="display-6 fw-bold text-danger">10</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{/* Tab 3 - Tìm kiếm nâng cao */}
-				<div className="tab-pane fade" id="search" role="tabpanel">
-					<form className="row g-3">
-						<div className="col-md-4">
-							<input type="text" className="form-control" placeholder="Tên nhân sự" />
-						</div>
-						<div className="col-md-4">
-							<select className="form-select">
-								<option>Chọn phòng ban</option>
-								<option>Sản xuất</option>
-								<option>Kỹ thuật</option>
-								<option>Quản lý</option>
-							</select>
-						</div>
-						<div className="col-md-4">
-							<select className="form-select">
-								<option>Trạng thái</option>
-								<option>Đang làm</option>
-								<option>Đã nghỉ</option>
-							</select>
-						</div>
-						<div className="col-12">
-							<SearchButton type="submit">Tìm kiếm</SearchButton>
-						</div>
-					</form>
-				</div>
+		<div className="container">
+			<div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
+				<Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
+					<People fontSize="large" />
+					NHÂN SỰ
+				</Typography>
+			</div>
+			<div className="card p-3 mb-3" style={{ border: "1px solid #02437D"}}>
+				<StaffFilter search={search} onChange={handleSearchChange} />
+				<StaffTable staffs={paginatedStaffs} />
+				<Pagination 
+					page={page}
+					count={totalPages}
+					onChange={handlePageChange}
+				/>
 			</div>
 		</div>
 	);

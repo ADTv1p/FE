@@ -1,6 +1,10 @@
+.navbar .nav-link,
+.navbar .navbar-brand {
+	color: #02437D !important;
+}
+
 .navbar .dropdown-menu {
-	background: rgb(44, 150, 131);
-	border: none;
+	border: 1px solid #02437D;
 	border-radius: .5em;
 	position: absolute;
 	margin-top: 7px; 
@@ -8,10 +12,10 @@
 }
 
 .navbar .dropdown-item {
-	color: #fff;
+	color: #02437D;
 }
 
 .navbar .dropdown-item:hover {
-	background-color: #2cbba1ff;
-	color: #fff;
+	background-color: #F1C143;
+	color: #02437D;
 }

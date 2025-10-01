@@ -1,10 +1,13 @@
+import { CircularProgress, Typography } from "@mui/material";
 const IfLoading = () => {
     return (
-        <div className="container text-center">
-            <div className="spinner-border text-primary mb-3" role="status">
-                <span className="visually-hidden">Loading...</span>
+        <div className="container mt-5 d-flex justify-content-center align-items-center">
+            <div className="text-center">
+                <CircularProgress color="primary" size={60}/>
+                <Typography variant="h6" mt={2}>
+                    Đang tải dữ liệu...
+                </Typography>
             </div>
-            <p className="fs-5">Đang tải dữ liệu...</p>
         </div>
     );
 }

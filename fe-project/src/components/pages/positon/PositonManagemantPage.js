@@ -1,12 +1,27 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Typography } from "@mui/material";
+import { BusinessCenter } from "@mui/icons-material";
 import positionService from "../../../services/positionService";
 import ViewPosition from "./ViewPosition";
 import PositionTable from "./PositionTable";
+import Pagination from "../../common/Pagination"; 
+import { AddButton, BackButton } from "../../common/ActionButtons";
+import ExportButton from "../../common/ExportButton";
 
 const PositionManagement = () => {
+	const navigate = useNavigate();
 	const [positions, setPositions] = useState([]);
 	const [selectedPosition, setSelectedPosition] = useState(null);
+	const [page, setPage] = useState(1);
+	const itemsPerPage = 10;
+
+	const paginatedPositions = positions.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((item, index) => ({
+		...item,
+		stt: (page - 1) * itemsPerPage + index + 1 // Tính STT
+	}));
+	const totalPages = Math.ceil(positions.length / itemsPerPage);
 
 	useEffect(() => {
 		const fetchPositions = async () => {
@@ -14,26 +29,56 @@ const PositionManagement = () => {
 				const res = await positionService.getAllPositions();
 				if (res?.EC === 0) setPositions(res.DT);
 			} catch (err) {
-				console.error("Lỗi tải vị trí:", err);
 				toast.error("Lỗi khi tải danh sách vị trí.");
 			}
 		};
 		fetchPositions();
 	}, []);
 
+	const handlePageChange = (newPage) => {
+		setPage(newPage);
+	};
+
 	return (
-		<div className="shadow-lg border-0 rounded-3 bg-white p-3">
-			<div className="d-flex justify-content-between align-items-center mb-3">
-				<p className="lead fs-2 mb-0">Quản lý vị trí</p>
+		<div className="container">
+			<div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
+				<Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
+					<BusinessCenter fontSize="large" />
+					QUẢN LÝ VỊ TRÍ
+				</Typography>
+				<div>
+					<AddButton className="me-2" onClick={() => navigate("/them-vi-tri")}>
+						Thêm Vị trí
+					</AddButton>
+					<ExportButton className="me-2"> 
+						Xuất Danh Sách
+					</ExportButton>
+					<BackButton onClick={() => window.history.back()}>
+						Quay lại
+					</BackButton>
+				</div>
 			</div>
 
-			<div className="row">
-				<div className={selectedPosition ? "col-md-6" : "col-12"}>
-					<PositionTable positions={positions} onView={setSelectedPosition} />
+			<div className="row g-3">
+				<div className={selectedPosition ? "col-8" : "col-12"}>
+					<div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
+						<div className="card-body">
+							<h5 className="card-title fw-bold mb-3">Bảng danh sách</h5>
+							<PositionTable 
+								positions={paginatedPositions}
+								onView={setSelectedPosition} 
+							/>
+							<Pagination 
+								page={page}
+								count={totalPages}
+								onChange={handlePageChange}
+							/>
+						</div>
+					</div>
 				</div>
 
 				{selectedPosition && (
-					<div className="col-md-6">
+					<div className="col">
 						<ViewPosition
 							position={selectedPosition}
 							onClose={() => setSelectedPosition(null)}

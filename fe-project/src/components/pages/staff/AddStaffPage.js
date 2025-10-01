@@ -3,7 +3,10 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import positionService from "../../../services/positionService";
 import staffService from "../../../services/staffService";
-import { ConfirmButton } from "../../common/ActionButtons";
+import { ConfirmButton, FileButton } from "../../common/ActionButtons";
+import { Typography, TextField, MenuItem, Avatar, Stack , Button } from "@mui/material";
+
+import { PersonAdd  } from '@mui/icons-material';
 
 const STATUS_OPTIONS = [
 	{ value: "active", label: "Đang làm việc" },
@@ -96,112 +99,120 @@ const AddStaff = () => {
 	};
 
 	return (
-		<div className="card shadow-lg border-0 rounded-3">
-			<div className="card-header text-center py-2">
-				<p className="lead fs-2">
-					<i className="fas fa-user-plus me-2"></i>Thêm nhân sự mới
-				</p>
+		<>
+		<div className="container">
+			<div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
+                <Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
+					<PersonAdd  fontSize="large" />
+					THÊM NHÂN SỰ MỚI
+				</Typography>
 			</div>
 
-			<div className="card-body p-4">
-				<form className="row g-4" onSubmit={handleSubmit}>
+			<div className="card shadow-sm p-3 mb-3">
+				<form className="row g-3" onSubmit={handleSubmit}>
 					{/* Ảnh nhân sự */}
-					<div className="col-12">
-						<div className="card shadow-sm border-0 p-3 text-center">
-							{preview && (
-								<img
-									src={preview}
-									alt="Xem trước"
-									className="rounded-circle border mb-3"
-									style={{ width: "150px", height: "150px", objectFit: "cover" }}
-								/>
-							)}
-							<label className="form-label fw-bold">Ảnh nhân sự</label>
-							<input
-								type="file"
-								accept="image/*"
-								className="form-control border-dark"
-								onChange={handleChange}
-								name="avatar"
-								required
-							/>
+					<div className="col-4">
+						<div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
+							<div className="card-body d-flex flex-column align-items-center justify-content-center">
+								{preview && (
+									<Avatar
+										src={preview}
+										alt="Xem trước"
+										sx={{ width: 150, height: 150, mb: 2, border: "2px solid #ccc" }}
+									/>
+								)}
+
+								<Stack direction="row" spacing={2} justifyContent="center">
+									<FileButton
+										onChange={handleChange}
+										accept="image/*"
+										name="avatar"
+										required
+									>
+										Ảnh nhân sự
+									</FileButton>
+								</Stack>
+							</div>
+
 						</div>
 					</div>
 
 					{/* Thông tin cá nhân */}
-					<div className="col-md-6">
-						<div className="card shadow-sm border-0 p-3 h-100">
-							<p className="fw-bold mb-3">Thông tin cá nhân</p>
-							{["full_name", "email", "phone", "date_of_birth"].map((field) => (
-								<div className="mb-3" key={field}>
-									<label className="form-label fw-bold">
-										{{
-											full_name: "Họ và tên",
-											email: "Email",
-											phone: "Số điện thoại",
-											date_of_birth: "Ngày sinh",
-										}[field]}
-									</label>
-									<input
-										type={field === "email" ? "email" : field === "date_of_birth" ? "date" : "text"}
-										className="form-control border-dark"
-										name={field}
-										value={formData[field]}
-										onChange={handleChange}
-										required={field !== "date_of_birth"}
-									/>
+					<div className="col-4">
+						<div className="card shadow-sm h-100" style={{ borderColor: "transparent" }}>
+							<div className="card-header fw-bold" style={{ backgroundColor: "#02437D", color: "#fff" }}>
+								Thông tin cá nhân
+							</div>
+							<div className="card-body" style={{ color: "#02437D" }}>
+								{/* Họ và tên */}
+								<div className="mb-3">
+									<TextField label="Họ và tên" type="text" name="full_name"
+										value={formData.full_name} onChange={handleChange}
+										fullWidth required />
 								</div>
-							))}
+
+								<div className="mb-3">
+									<TextField label="Email" type="email" name="email"
+										value={formData.email} onChange={handleChange}
+										fullWidth required />
+								</div>
+
+								<div className="mb-3">
+									<TextField label="Số điện thoại" type="text" name="phone"
+										value={formData.phone} onChange={handleChange}
+										fullWidth required />
+								</div>
+
+								<div className="mb-3">
+									<TextField label="Ngày sinh" type="date" name="date_of_birth"
+										value={formData.date_of_birth} onChange={handleChange}
+										fullWidth InputLabelProps={{ shrink: true }} required />
+								</div>
+							</div>
 						</div>
 					</div>
 
 					{/* Thông tin công việc */}
-					<div className="col-md-6">
-						<div className="card shadow-sm border-0 p-3 h-100">
-							<p className="fw-bold mb-3">Thông tin công việc</p>
-
-							{/* Vị trí */}
-							<div className="mb-3">
-								<label className="form-label fw-bold">Vị trí</label>
-								<select
-									className="form-select border-dark"
-									name="position_id"
-									value={formData.position_id}
-									onChange={handleChange}
-									required
-								>
-									<option value="">Chọn vị trí</option>
-									{positions.map((pos) => (
-										<option key={pos.position_id} value={pos.position_id}>
-											{pos.code} - {pos.role}
-										</option>
-									))}
-								</select>
+					<div className="col-4">
+						<div className="card shadow-sm h-100" style={{ borderColor: "transparent" }}>
+							<div className="card-header fw-bold" style={{ backgroundColor: "#F1C143", color: "#02437D" }}>
+								Thông tin công việc
 							</div>
+							<div className="card-body" style={{ color: "#02437D" }}>
+								{/* Vị trí */}
+								<div className="mb-3">
+									<TextField
+										select label="Vị trí" name="position_id"
+										value={formData.position_id} onChange={handleChange}
+										fullWidth required
+									>
+										<option value="">Chọn vị trí</option>
+										{positions.map((pos) => (
+											<MenuItem key={pos.position_id} value={pos.position_id}>
+												{pos.code} - {pos.role}
+											</MenuItem>
+										))}
+									</TextField>
+								</div>
 
-							{/* Phòng ban */}
-							<div className="mb-3">
-								<label className="form-label fw-bold">Phòng ban (không điều chỉnh)</label>
-								<input
-									type="text"
-									className="form-control border border-secondary bg-light text-muted"
-									name="department"
-									value={formData.department}
-									readOnly
-								/>
-							</div>
+								{/* Phòng ban */}
+								<div className="mb-3">
+									<TextField
+										label="Phòng ban (không điều chỉnh)" name="department"
+										value={formData.department} fullWidth required
+										InputProps={{ readOnly: true }} variant="filled"
+									/>
+								</div>
 
-							<div className="mb-3">
-								<label className="form-label fw-bold">Ngày bắt đầu làm việc</label>
-								<input
-									type="date"
-									className="form-control border-dark"
-									name="start_date"
-									value={formData.start_date}
-									onChange={handleChange}
-									required
-									min={new Date().toISOString().split("T")[0]} // chỉ chọn từ hôm nay
-								/>
+								{/* Ngày bắt đầu */}
+								<div className="mb-3">
+									<TextField
+										label="Ngày bắt đầu làm việc" type="date" name="start_date"
+										value={formData.start_date} onChange={handleChange}
+										fullWidth required
+										InputLabelProps={{ shrink: true }} inputProps={{ min: new Date().toISOString().split("T")[0] }}
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -215,6 +226,8 @@ const AddStaff = () => {
 				</form>
 			</div>
 		</div>
+
+		</>
 	);
 };
 

@@ -28,8 +28,18 @@ const createProcess = async (data) => {
 	}
 };
 
+const deleteProcess = async (process_id) => {
+	try {
+		const response = await axios.delete(`/processes/${process_id}`);
+		return response;
+	} catch (error) {
+		console.error("Lỗi khi gọi API POST /api/process/delete:", error);
+		throw error;
+	}
+};
+
 export default { 
 	getAllProcesses,
     getSupportProccesses,
-    createProcess 
+    createProcess, deleteProcess
 };

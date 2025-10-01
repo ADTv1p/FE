@@ -1,12 +1,13 @@
-// AddProcess.jsx
 import { useState } from "react";
-import { ConfirmButton } from "../../common/ActionButtons";
+import { ConfirmButton, CloseButton } from "../../common/ActionButtons";
+import { TextField } from "@mui/material";
 
 const AddProcess = ({ show, onSubmit, onClose }) => {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 
-	const handleSubmit = () => {
+	const handleSubmit = (e) => {
+		e.preventDefault();
 		onSubmit({ name, description });
 		setName("");
 		setDescription("");
@@ -17,36 +18,33 @@ const AddProcess = ({ show, onSubmit, onClose }) => {
 			{show && <div className="modal-backdrop fade show"></div>}
 			<div className={`modal fade ${show ? "show d-block" : ""}`} tabIndex="-1">
 				<div className="modal-dialog modal-dialog-centered">
-					<div className="modal-content">
-						<div className="modal-header">
-							<h5 className="modal-title">Thêm thao tác</h5>
-							<button
-								type="button"
-								className="btn-close"
-								onClick={onClose}
-							></button>
+					<div className="modal-content" style={{ borderColor: "transparent" }}>
+                        <div className="modal-header py-2" style={{ backgroundColor: "#02437D", color: "#fff" }}>
+                            <h5 className="modal-title fw-bold" id="addProcessStepModalLabel">Thêm thao tác</h5>
+							<CloseButton size="small" className="btn-close" onClick={onClose} />
 						</div>
-						<div className="modal-body p-3">
+						<div className="modal-body p-3" style={{ color: "#02437D" }}>
 							<form onSubmit={handleSubmit}>
 								<div className="mb-2">
-									<label className="form-label">Tên thao tác</label>
-									<input
-										type="text"
-										className="form-control"
+									<TextField
+										label="Tên thao tác"
 										value={name}
 										onChange={(e) => setName(e.target.value)}
-										placeholder="Nhập tên thao tác"
+										fullWidth
 										required
+										placeholder="Nhập tên thao tác"
 									/>
 								</div>
 								<div className="mb-2">
-									<label className="form-label">Mô tả</label>
-									<textarea
-										className="form-control"
+									<TextField
+										label="Mô tả"
 										value={description}
 										onChange={(e) => setDescription(e.target.value)}
-										placeholder="Nhập mô tả"
+										fullWidth
+										multiline
+										rows={3}
 										required
+										placeholder="Nhập mô tả"
 									/>
 								</div>
 								<ConfirmButton className="w-100" type="submit" disabled={!name || !description}>
