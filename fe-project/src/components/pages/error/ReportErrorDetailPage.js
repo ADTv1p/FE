@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Report } from "@mui/icons-material";
-import { Typography } from "@mui/material";
+import { Avatar, Typography } from "@mui/material";
 import { BackButton } from "../../common/ActionButtons";
 
 import workRecordService from "../../../services/workRecordService";
@@ -26,7 +26,9 @@ const ReportErrorDetail = () => {
 				console.error(err);
 				setError(true);
 			} finally {
-				setLoading(false)
+				setTimeout(() => {
+					setLoading(false);
+				}, 1000);
 			}
 		};
 		fetchWorkRecord();
@@ -78,7 +80,6 @@ const ReportErrorDetail = () => {
                     </BackButton>
                 </div>
             </div>
-
             {workRecord ? (
 				<>
 					{/* Thông tin nhân viên */}
@@ -100,8 +101,8 @@ const ReportErrorDetail = () => {
 
 									<div className="rounded p-2" style={{ border: "1px solid #02437D", flex: "1 1 0"}}>
 										<div className="d-flex align-items-center mb-3 rounded p-2" style={{ border: "1px solid #02437D"}}>
-											<img
-												src={`http://localhost:3001/${workRecord.staff?.avatar}`}
+											<Avatar
+												src={workRecord.staff.avatar ? `http://localhost:3001/${workRecord.staff.avatar}` : ""}
 												alt="Ảnh đại diện"
 												className="rounded-circle me-2"
 												style={{ width: '3em', height: '3em', objectFit: 'cover' }}

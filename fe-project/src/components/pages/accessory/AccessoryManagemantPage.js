@@ -1,4 +1,5 @@
 // src/components/accessories/AccessoryManagement.jsx
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import AddAccessory from "./AddAccessory";
@@ -75,7 +76,6 @@ const AccessoryManagement = () => {
     
     // Thêm hàm xóa để đảm bảo các nút hành động đều có logic
     const handleDeleteAccessory = (accessoryId) => {
-       
         toast.info("Chức năng xóa đang được phát triển.");
     };
 
@@ -100,7 +100,11 @@ const AccessoryManagement = () => {
             </div>
 
             <div className="row g-3">
-                <div className={showForm ? "col-9" : "col-12"}>
+                <motion.div
+                    style={{ width: "100%" }} // fallback
+                    animate={{ width: showForm ? "75%" : "100%" }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
                     <div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
 						<div className="card-body">
 							<h5 className="card-title fw-bold mb-3">Bảng danh sách</h5>
@@ -147,7 +151,7 @@ const AccessoryManagement = () => {
                             </div>
 						</div>
 					</div>
-                </div>
+                </motion.div>
 
                 {showForm && (
                     <div className="col-3">

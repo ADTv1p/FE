@@ -34,17 +34,28 @@ const ErrorManagement = () => {
 
     const handleFilterWorkRecords = (filters) => {
         const filtered = workRecords.filter(record => {
+            const recordDate = new Date(record.createdAt);
+
+            // Lọc theo khoảng ngày
+            const fromDate = filters.fromDate ? new Date(filters.fromDate) : null;
+            const toDate = filters.toDate ? new Date(filters.toDate) : null;
+            const inDateRange =
+                (!fromDate || recordDate >= fromDate) &&
+                (!toDate || recordDate <= toDate);
+
             return (
                 (!filters.phone || record.staff?.phone?.includes(filters.phone)) &&
                 (!filters.email || record.staff?.email?.includes(filters.email)) &&
-                (!filters.createdAt || new Date(record.createdAt).toDateString() === new Date(filters.createdAt).toDateString()) &&
+                (!filters.createdAt || recordDate.toDateString() === new Date(filters.createdAt).toDateString()) &&
                 (!filters.errorName || record.error?.name?.toLowerCase().includes(filters.errorName.toLowerCase())) &&
                 (!filters.role || record.staff?.position?.role === filters.role) &&
-                (!filters.name || record.staff?.full_name?.toLowerCase().includes(filters.name.toLowerCase()))
+                (!filters.name || record.staff?.full_name?.toLowerCase().includes(filters.name.toLowerCase())) &&
+                inDateRange
             );
         });
         setFilterWorkRecord(filtered);
     };
+
 
     const handleExportReport = async(filteredWorkRecord) => {
         exportWorkRecordsToExcel(filteredWorkRecord);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DeleteButton, EditButton } from "../../common/ActionButtons";
+import { Avatar, Stack } from "@mui/material";
 import EditStaffModal from './EditStaffModal';
 
 const StaffTable = ({ staffs }) => {
@@ -20,8 +21,8 @@ const StaffTable = ({ staffs }) => {
 						<tr className="text-center">
 							<th>#</th>
 							<th>Họ và tên</th>
+							<th>Thao tác</th>
 							<th>Vị trí</th>
-							<th>Phòng ban</th>
 							<th>Số điện thoại</th>
 							<th>Email</th>
 							<th>Trạng thái</th>
@@ -33,7 +34,12 @@ const StaffTable = ({ staffs }) => {
 							staffs.map((staff) => (
 								<tr key={staff.staff_id} style={{ cursor: "pointer" }} onClick={() => onViewDetail(staff.staff_id)}>
 									<td className="text-center">{staff.stt}</td>
-									<td>{staff.full_name}</td>
+									<td>
+										<Stack direction="row" alignItems="center" spacing={1}>
+											<Avatar alt={staff.full_name} src={staff.avatar ? `http://localhost:3001/${staff.avatar}` : ""} />
+											<span>{staff.full_name}</span>
+										</Stack>
+									</td>
 									<td>{staff.position?.process?.name || "Không có"}</td>
 									<td>{staff.position?.code || "Không có"}</td>
 									<td>{staff.department}</td>

@@ -1,6 +1,5 @@
 // src/components/ProcessTable.js
-import { DeleteButton, DetailButton } from "../../common/ActionButtons";
-import ExportButton from "../../common/ExportButton";
+import { DeleteButton } from "../../common/ActionButtons";
 
 const ProcessTable = ({ processes, onView, onDelete }) => {
     return (

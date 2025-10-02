@@ -1,4 +1,5 @@
 // ProcessManagement.js
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import AddProcess from "./AddProcess";
@@ -6,15 +7,18 @@ import AddStep from "./AddStep";
 import ViewProcess from "./ViewProcess";
 import ProcessTable from "./ProcessTable";
 import ViewStep from "../step/ViewStep";
+import EditProcessModal from "./EditProcessModal";
 import processService from "../../../services/processService";
 import accessoryService from "../../../services/accessoryService";
 import processStepService from "../../../services/processStepService";
-import { AddButton, BackButton } from "../../common/ActionButtons";
+import { AddButton, BackButton, FilterButton } from "../../common/ActionButtons";
 import ExportButton from "../../common/ExportButton";
 import IfLoading from "../../common/IfLoading";
 import IfError from "../../common/IfError";
 import { Typography } from "@mui/material";
 import { SettingsApplications } from '@mui/icons-material';
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+
 import Pagination from "../../common/Pagination";
 import ExportProcessListToExcel from "../../utils/export/ExportProcessListToExcel";
 
@@ -30,6 +34,10 @@ const ROWS_PER_PAGE = 10;
 const ProcessManagement = () => {
     const [allProcesses, setAllProcesses] = useState([]); // Lưu toàn bộ data gốc
     const [processes, setProcesses] = useState([]); // Danh sách hiển thị (để dành cho sau này có lọc)
+    const [showEdit, setShowEdit] = useState(false);
+    const [process, setProcess] = useState(null);
+    const [filterType, setFilterType] = useState("");
+
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -41,6 +49,22 @@ const ProcessManagement = () => {
         showAddProcessModal: false,
         showAddStepModal: false
     });
+
+    // Xử lý lọc dữ liệu
+    const handleFilter = (type) => {
+        setFilterType(type);
+
+        let sorted = [...allProcesses]; // copy dữ liệu gốc
+
+        if(type === "newest") {
+            sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        } else if(type === "oldest") {
+            sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        }
+
+        setProcesses(sorted);
+        setPage(1); // reset phân trang về trang đầu
+    };
 
     // Lấy dữ liệu từ API
     const fetchProcesses = async () => {
@@ -186,12 +210,40 @@ const ProcessManagement = () => {
         const accessories = await fetchAccessories();
         setViewState(prev => ({ ...prev, showAddStepModal: true, accessories }));
     };
-    
+
     // Xử lý phân trang
     const handlePageChange = (newPage) => setPage(newPage);
     const startIdx = (page - 1) * ROWS_PER_PAGE;
     const endIdx = startIdx + ROWS_PER_PAGE;
     const currentProcesses = processes.slice(startIdx, endIdx);
+
+    const handleEditProcess = (p) => {
+        setProcess(p);
+        setShowEdit(true);
+    };
+
+    const handleUpdateProcess = async (updatedData) => {
+        try {
+            const res = await processService.updateProcess(updatedData);
+            if(res?.EC === 0) {
+                toast.success(res.EM);
+                setShowEdit(false);
+                // Sau 1s reload lại trang
+                fetchProcesses()
+                setViewState(prev => ({
+                    ...prev,
+                    selectedStep: null,
+                    selectedProcess: res.DT,
+                }));
+            } else if(res?.EC === 1) {
+                toast.error(res.EM);
+            } else {
+                toast.warning(res.EM || "Có vấn đề xảy ra");
+            }
+        } catch(err) {
+            showErrorToast(err, "Lỗi cập nhật thao tác:");
+        }
+    };
 
     // Render giao diện
     if (loading) return <IfLoading />;
@@ -222,11 +274,29 @@ const ProcessManagement = () => {
 
             <div className="row g-4">
                 {/* Bảng process */}
-                <div className={viewState.selectedProcess || viewState.selectedStep ? "col-6" : "col-12"}>
+                <motion.div
+                    style={{ width: "100%" }} // fallback
+                    animate={{ width: viewState.selectedProcess || viewState.selectedStep ? "50%" : "100%" }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
                     <div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
-						<div className="card-body">
-							<h5 className="card-title fw-bold mb-3">Bảng danh sách</h5>
-							<ProcessTable
+                        <div className="card-body">
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                <h5 className="card-title fw-bold mb-0">Bảng danh sách</h5>
+                                <FormControl size="small" sx={{ minWidth: 120 }}>
+                                    <InputLabel id="filter-label">Lọc</InputLabel>
+                                    <Select
+                                        labelId="filter-label"
+                                        value={filterType}
+                                        label="Lọc"
+                                        onChange={(e) => handleFilter(e.target.value)}
+                                    >
+                                        <MenuItem value="newest">Mới nhất</MenuItem>
+                                        <MenuItem value="oldest">Cũ nhất</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <ProcessTable
                                 processes={currentProcesses}
                                 onEdit={(p) => console.log("Sửa", p)}
                                 onView={handleViewProcess}
@@ -237,11 +307,10 @@ const ProcessManagement = () => {
                                 count={Math.ceil(processes.length / ROWS_PER_PAGE)}
                                 onChange={handlePageChange}
                             />
-						</div>
-					</div>
-                </div>
+                        </div>
+                    </div>
+                </motion.div>
 
-                {/* Panel chi tiết */}
                 {(viewState.selectedProcess || viewState.selectedStep) && (
                     <div className="col-6">
                         {viewState.selectedProcess && (
@@ -250,6 +319,7 @@ const ProcessManagement = () => {
                                 onClose={() => setViewState(prev => ({ ...prev, selectedProcess: null }))}
                                 onAddStep={handleOpenAddStepModal}
                                 onViewStep={handleViewStep}
+                                onEditProcess={handleEditProcess}
                             />
                         )}
 
@@ -275,6 +345,12 @@ const ProcessManagement = () => {
                 accessories={viewState.accessories}
                 onClose={() => setViewState(prev => ({ ...prev, showAddStepModal: false }))}
                 onSubmit={handleAddStep}
+            />
+            <EditProcessModal
+                show={showEdit}
+                process={process}
+                onClose={() => setShowEdit(false)}
+                onSubmit={handleUpdateProcess}
             />
         </div>
     );

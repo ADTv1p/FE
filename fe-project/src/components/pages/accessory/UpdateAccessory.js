@@ -1,4 +1,5 @@
 // src/components/accessories/UpdateAccessory.jsx
+import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import "./UpdateAccessory.css";
 import { TextField } from "@mui/material"; // Sửa lỗi ở đây
@@ -28,10 +29,16 @@ const UpdateAccessory = ({ accessory, onSubmit, onClose }) => {
     };
 
     return (
-        <div className="card shadow-sm h-100 update-accessory-card" style={{ borderColor: "transparent" }}>
+        <motion.div
+			initial={{ opacity: 0, x: -50 }}
+			animate={{ opacity: 1, x: 0 }}
+			transition={{ duration: 0.3, delay: 0.3, ease: "easeInOut" }}
+			className="card shadow-sm"
+			style={{ borderColor: "transparent" }}
+		>
             <div className="card-header fw-bold d-flex justify-content-between  align-items-center" style={{ backgroundColor: "#02437D", color: "#fff" }}>
                 <h5 className="mb-0">Cập nhật phụ kiện</h5>
-				<CloseButton size="small" className="btn-close" onClick={onClose} />
+                <CloseButton size="small" className="btn-close" onClick={onClose} />
             </div>
             <div className="card-body">
                 <form onSubmit={handleSubmit} className="row g-3">
@@ -67,7 +74,7 @@ const UpdateAccessory = ({ accessory, onSubmit, onClose }) => {
                     </div>
                 </form>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

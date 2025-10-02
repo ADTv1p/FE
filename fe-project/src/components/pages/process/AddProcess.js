@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ConfirmButton, CloseButton } from "../../common/ActionButtons";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 
 const AddProcess = ({ show, onSubmit, onClose }) => {
 	const [name, setName] = useState("");
@@ -46,6 +46,9 @@ const AddProcess = ({ show, onSubmit, onClose }) => {
 										required
 										placeholder="Nhập mô tả"
 									/>
+									<Typography variant="body2" color="textSecondary" mt={1}>
+                                        Mô tả thao tác dùng cho bản thiết kế và sản phẩm nào
+                                    </Typography>
 								</div>
 								<ConfirmButton className="w-100" type="submit" disabled={!name || !description}>
 									Thêm thao tác

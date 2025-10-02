@@ -80,9 +80,8 @@ const StaffDetailPage = () => {
                         </div>
                         <div className="card-body" style={{ color: "#02437D" }}>
                             <div className="d-flex align-items-center mb-3">
-                                <Avatar
-                                    src={staff.avatar}
-                                    alt={staff.full_name}
+                                <Avatar 
+                                    alt={staff.full_name} src={staff.avatar ? `http://localhost:3001/${staff.avatar}` : ""}
                                     sx={{ width: 90, height: 90, marginRight: 2 }}
                                 />
                                 <div>

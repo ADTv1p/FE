@@ -1,4 +1,5 @@
 // src/components/accessories/AddAccessory.jsx
+import { motion } from "framer-motion";
 import { useState } from 'react';
 import { TextField } from '@mui/material';
 import { ConfirmButton, CloseButton } from '../../common/ActionButtons';
@@ -21,7 +22,13 @@ const AddAccessory = ({ onSubmit, onClose }) => {
     };
 
     return (
-		<div className="card shadow-sm h-100 update-accessory-card" style={{ borderColor: "transparent" }}>
+		<motion.div
+			initial={{ opacity: 0, x: -50 }}
+			animate={{ opacity: 1, x: 0 }}
+			transition={{ duration: 0.3, delay: 0.3, ease: "easeInOut" }}
+			className="card shadow-sm"
+			style={{ borderColor: "transparent" }}
+		>
 			<div className="card-header fw-bold d-flex justify-content-between align-items-center" style={{ backgroundColor: "#02437D", color: "#fff" }}>
 				<h5 className="mb-0">Thêm phụ kiện mới</h5>
 				<CloseButton size="small" className="btn-close" onClick={onClose} />
@@ -60,7 +67,7 @@ const AddAccessory = ({ onSubmit, onClose }) => {
 					</div>
 				</form>
 			</div>
-		</div>
+		</motion.div>
     );
 };
 

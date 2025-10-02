@@ -28,6 +28,17 @@ const createProcess = async (data) => {
 	}
 };
 
+const updateProcess = async (updatedData) => {
+	try {
+		const response = await axios.put(`/processes/${updatedData.process_id}`, updatedData);
+		return response;
+	} catch (error) {
+		console.error("Lỗi khi gọi API PUT /processes/:process_id:", error);
+		throw error;
+	}
+};
+
+
 const deleteProcess = async (process_id) => {
 	try {
 		const response = await axios.delete(`/processes/${process_id}`);
@@ -41,5 +52,5 @@ const deleteProcess = async (process_id) => {
 export default { 
 	getAllProcesses,
     getSupportProccesses,
-    createProcess, deleteProcess
+    createProcess, updateProcess, deleteProcess
 };

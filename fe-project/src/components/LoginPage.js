@@ -40,19 +40,28 @@ const LoginCard = () => {
 
         try {
             const resData = await userService.handleLogin({ email, password });
-            if (resData.EC === 0) {
-                toast.success("Chào mừng bạn");
-                setErrors({ email: "", password: "" });
-                setTimeout(() => {
-                    navigate("/"); // điều hướng sau 1 giây
-                }, 1000);
-            } else if (resData.EC === 1) {
-                setErrors({ ...errors, password: resData.EM || "Đăng nhập thất bại" });
-            } else if (resData.EC === 2) {
-                setErrors({ ...errors, email: resData.EM || "Email không tồn tại" });
+            setErrors({ email: "", password: "" });
+            switch (resData.EC) {
+                case 0:
+                    userService.setAuthData({ token: resData.DT.token, user: resData.DT.user });
+                    toast.success("Đăng nhập thành công, chào mừng bạn!");
+                    setTimeout(() => navigate("/"), 1000);
+                    break;
+                case 1:
+                    setErrors(prev => ({ ...prev, password: resData.EM || "Thiếu thông tin đăng nhập" }));
+                    break;
+                case 2:
+                    setErrors(prev => ({ ...prev, email: resData.EM || "Email không tồn tại" }));
+                    break;
+                case 3:
+                    setErrors(prev => ({ ...prev, password: resData.EM || "Mật khẩu không đúng" }));
+                    break;
+                default:
+                    setErrors(prev => ({ ...prev, password: resData.EM || "Đăng nhập thất bại" }));
             }
         } catch (err) {
-            setErrors({ ...errors, password: "Lỗi kết nối server" });
+            console.error("Lỗi kết nối server:", err);
+            setErrors(prev => ({ ...prev, password: "Lỗi kết nối server" }));
         }
     };
 

@@ -1,5 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
+
+import PrivateRoute from './components/common/PrivateRoute';
+
+import YazakiIntroPage from './components/YazakiIntroPage';
 import TestView from './components/TestView';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
@@ -17,6 +21,7 @@ import ErrorStatistics from './components/pages/statistic/ErrorsStatistics/Error
 import ProcessStatistics from './components/pages/statistic/ProcessesStatistic/ProcessStatisticsPage';
 import ErrorManagerment from './components/pages/error/ErrorManagermentPage';
 import Header from './components/common/Header';
+import Footer from './components/common/Footer';
 function App() {
 	return (
 		<Router>
@@ -24,32 +29,34 @@ function App() {
 			<div style={{ padding: '2em', minHeight: '100vh' }}>
 				<Routes>
 					{/* --- Nhóm 0: Đăng nhập & Đăng ký --- */}
+					<Route path="/" element={<YazakiIntroPage />} />
 					<Route path="/dang-nhap" element={<LoginPage />} />
 					<Route path="/dang-ky" element={<RegisterPage />} />
+  					<Route element={<PrivateRoute />}>
+						{/* --- Nhóm 1: Trang chung --- */}
+						<Route path="/test" element={<TestView />} />
+						<Route path="/" element={<ProcessStatistics/>} />
+						
+						{/* --- Nhóm 2: Quản lý Nhân sự & Vị trí (Phòng ban/Chức vụ) --- */}
+						<Route path="/quan-ly-nhan-su" element={<StaffManagement />} />
+						<Route path="/them-nhan-su" element={<AddStaff />} />
+						<Route path="/quan-ly-nhan-su/chi-tiet-nhan-su/:staff_id" element={<StaffDetail />} />
+						<Route path="/quan-ly-vi-tri" element={<PositionManagement />} />
+						<Route path="/them-vi-tri" element={<AddPosition />} />
 
-					{/* --- Nhóm 1: Trang chung --- */}
-					<Route path="/test" element={<TestView />} />
-					<Route path="/" element={<ProcessStatistics/>} />
-					
-					{/* --- Nhóm 2: Quản lý Nhân sự & Vị trí (Phòng ban/Chức vụ) --- */}
-					<Route path="/quan-ly-nhan-su" element={<StaffManagement />} />
-					<Route path="/them-nhan-su" element={<AddStaff />} />
-					<Route path="/quan-ly-nhan-su/chi-tiet-nhan-su/:staff_id" element={<StaffDetail />} />
-					<Route path="/quan-ly-vi-tri" element={<PositionManagement />} />
-					<Route path="/them-vi-tri" element={<AddPosition />} />
+						{/* --- Nhóm 3: Quản lý Vật tư & Quy trình kỹ thuật (Cấu hình hệ thống) --- */}
+						<Route path="/quan-ly-phu-kien" element={<AccessoryManagemant />} />
+						<Route path="/quan-ly-thao-tac" element={<ProcessManagement />} />
 
-					{/* --- Nhóm 3: Quản lý Vật tư & Quy trình kỹ thuật (Cấu hình hệ thống) --- */}
-					<Route path="/quan-ly-phu-kien" element={<AccessoryManagemant />} />
-					<Route path="/quan-ly-thao-tac" element={<ProcessManagement />} />
+						{/* --- Nhóm 4: Quản lý Lỗi & Báo cáo Lỗi --- */}
+						<Route path="/quan-ly-loi" element={<ErrorManagerment />} />
+						<Route path="/bao-cao-loi" element={<ReportError />} />
+						<Route path="/chi-tiet-loi/:work_record_id" element={<ReportErrorDetail />} />
 
-					{/* --- Nhóm 4: Quản lý Lỗi & Báo cáo Lỗi --- */}
-					<Route path="/quan-ly-loi" element={<ErrorManagerment />} />
-					<Route path="/bao-cao-loi" element={<ReportError />} />
-					<Route path="/chi-tiet-loi/:work_record_id" element={<ReportErrorDetail />} />
-
-					{/* --- Nhóm 5: Thống kê & Báo cáo --- */}
-					<Route path="/thong-ke-loi" element={<ErrorStatistics />} />
-					<Route path="/thong-ke-thao-tac" element={<ProcessStatistics />} /> 
+						{/* --- Nhóm 5: Thống kê & Báo cáo --- */}
+						<Route path="/thong-ke-loi" element={<ErrorStatistics />} />
+						<Route path="/thong-ke-thao-tac" element={<ProcessStatistics />} /> 
+					</Route>
 				</Routes>
 
 				<ToastContainer
@@ -63,6 +70,7 @@ function App() {
 					theme="colored"        // hoặc "light"/"dark"
 				/>
 			</div>
+			<Footer />
 		</Router>
 	);
 }

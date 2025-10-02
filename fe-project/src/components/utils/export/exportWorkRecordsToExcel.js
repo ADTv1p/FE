@@ -42,7 +42,7 @@ const exportWorkRecordsToExcel = (workRecords, fileName = "BaoCaoLoi.xlsx") => {
 		}
 	});
 
-	// Highlight đỏ nhạt nếu ghi chú chứa "nghiêm trọng"
+	// Highlight đỏ nhạt nếu ghi chú chữ "nghiêm trọng"
 	workRecords.forEach((record, rowIdx) => {
 		if (record.note && record.note.toLowerCase().includes("lỗi")) {
 			const excelRow = rowIdx + 2; // +2 vì header chiếm dòng 1

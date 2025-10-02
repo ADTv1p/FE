@@ -73,8 +73,7 @@ const RegisterPage = () => {
 			<div className="card shadow overflow-hidden" style={{ borderColor: "#F1C143", width: "80%", maxWidth: 1000 }}>
                 <div className="row">
                     <div className="col-5 d-flex justify-content-center align-items-center" style={{ backgroundColor: "#F1C143", color: "#fff"  }}>
-                        <h1 className="text-center fw-bold ">Đăng ký</h1>
-                       
+                        <img src="/yazaki-seeklogo.png" alt="Logo" style={{ height: "3em", marginRight: "10px", filter: "drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.83))"  }} />
                     </div>
                     <div className="col p-5">
                         <form onSubmit={handleSubmit}>
