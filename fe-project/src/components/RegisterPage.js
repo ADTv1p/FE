@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { RegisterButton } from "./common/ActionButtons";
@@ -11,6 +12,7 @@ import userService from "../services/userService";
 
 
 const RegisterPage = () => {
+    const navigate = useNavigate();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
@@ -37,7 +39,7 @@ const RegisterPage = () => {
         }
 		if (password.length < 6) { newErrors.password = "Mật khẩu phải ít nhất 6 ký tự"; hasError = true; }
 		if (password !== confirmPassword) { newErrors.confirm = "Mật khẩu xác nhận không khớp"; hasError = true; }
-
+        
 		setErrors(newErrors);
 		return !hasError;
 	};
@@ -52,8 +54,13 @@ const RegisterPage = () => {
 
             if (resData.EC === 0) {
                 toast.success("Đăng ký thành công");
+                setTimeout(() => {
+                    navigate("/dang-nhap");
+                }, 1500);
             } else if (resData.EC === 2) {
                 setErrors({ ...errors, email: resData.EM || "Email đã được sử dụng" });
+            } else if (resData.EC === 3) {
+                setErrors({ ...errors, phone: resData.EM || "Số điện thoại đã được sử dụng" });
             } else {
                 toast.error(resData.EM || "Đăng ký thất bại");
                 setErrors({ ...errors, password: resData.EM || "Đăng ký thất bại" });

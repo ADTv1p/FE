@@ -1,29 +1,10 @@
 import { motion  } from "framer-motion";
-import { useState } from "react";
-import processStepService from "../../../services/processStepService";
-import processService from "../../../services/processService";
 import { AddButton, CloseButton, DeleteButton, DetailButton, EditButton } from "../../common/ActionButtons";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import EditProcessModal from "./EditProcessModal";
 
 const ViewProcess = ({ process, onClose, onAddStep, onViewStep, onEditProcess }) => {
 	const navigate = useNavigate();
 	if (!process) return null;
-
-	const handleDeleteStep = async (process_step_id) => {
-		try {
-			const res = await processStepService.deleteProcessStep(process_step_id);
-			if (res?.EC === 0) {
-				toast.success("Xóa bước thành công!");
-				onClose();
-			} else {
-				toast.error(res.EM);
-			}
-		} catch (err) {
-			toast.error("Lỗi kết nối khi xóa bước: " + err);
-		}
-	};
 
 	return (
 		<motion.div
@@ -90,7 +71,6 @@ const ViewProcess = ({ process, onClose, onAddStep, onViewStep, onEditProcess })
 													<td className="align-middle">
 														<div className="d-flex justify-content-center gap-2">
 															<DetailButton size="small" onClick={() => onViewStep?.(step)} />
-															<DeleteButton size="small" onClick={() => handleDeleteStep(step.process_step_id)} />
 														</div>
 													</td>
 												</tr>

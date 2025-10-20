@@ -22,7 +22,6 @@ const getStaffDetail = async (staff_id) => {
 
 const createStaff = async (data) => {
 	try {
-        console.log("Data sent to /staff/create:", data);
 		const response = await axios.post("/staff/create", data, { headers: { "Content-Type": "multipart/form-data"  }});
 		return response;
 	} catch (error) {
@@ -31,9 +30,19 @@ const createStaff = async (data) => {
 	}
 };
 
-const updateStaff = async (staff_id, data) => {
+const updateStaff = async (staff_id, avatar, data) => {
 	try {
-		return await axios.put(`/staff/update/${staff_id}`, data);
+		const formData = new FormData();
+		for (const [key, value] of data.entries()) {
+			formData.append(key, value);
+		}
+		if (avatar) {
+			formData.append('avatar', avatar);
+		}
+		const response = await axios.put(`/staff/update/${staff_id}`, formData, {
+			headers: { 'Content-Type': 'multipart/form-data' },
+		});
+		return response;
 	} catch (error) {
 		console.error("Lỗi khi gọi API PUT /staff/update:", error);
 		throw error;

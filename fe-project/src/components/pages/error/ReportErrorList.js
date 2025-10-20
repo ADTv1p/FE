@@ -20,7 +20,7 @@ const RecordErrorList = ({ workRecordList = []}) => {
 			</style>
             <div className="card shadow-sm" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
                 <div className="card-body">
-                    <h5 className="card-title fw-bold mb-3">Danh sách lỗi</h5>
+                    <h5 className="card-title fw-bold mb-3">Danh sách sự cố</h5>
                     <ul className="list-group list-group-flush">
                         {workRecordList.map((record) => (
                             <li 
@@ -56,11 +56,11 @@ const RecordErrorList = ({ workRecordList = []}) => {
                                     <div className="col-6">
                                         <div className="d-flex flex-column gap-2">
                                             <div className="border-bottom">
-                                                <span className="fw-bold">Lỗi: </span>
+                                                <span className="fw-bold">Sự cố: </span>
                                                 <small>{record.error?.name || "N/A"}</small>
                                             </div>
                                             <div className="border-bottom">
-                                                <span className="fw-bold">Mô tả lỗi: </span>
+                                                <span className="fw-bold">Mô tả sự cố: </span>
                                                 <small>{record.error?.description || "N/A"}</small>
                                             </div>
                                         </div>
@@ -89,7 +89,7 @@ const RecordErrorList = ({ workRecordList = []}) => {
                             </li>
                         ))}
                         {workRecordList.length === 0 && (
-                            <p className="text-center my-3">Không có báo cáo lỗi nào</p>
+                            <p className="text-center my-3">Không có báo cáo sự cố nào</p>
                         )}
                     </ul>
                 </div>

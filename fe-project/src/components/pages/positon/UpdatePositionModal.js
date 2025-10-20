@@ -1,15 +1,29 @@
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { CloseButton, ConfirmButton, FileButton } from "../../common/ActionButtons";
-import { TextField, MenuItem, Avatar } from "@mui/material";
-import staffService from "../../../services/staffService";
+import { CloseButton, ConfirmButton } from "../../common/ActionButtons";
+import { TextField, MenuItem } from "@mui/material";
 import positionService from "../../../services/positionService";
 import processService from "../../../services/processService";
 
+const TOOL_OPTIONS = [
+	{ value: "", label: "-- Không chọn --" },
+	{ value: "dao", label: "Dao cắt băng keo" },
+	{ value: "keo", label: "Kéo" },
+	{ value: "sung_gio", label: "Súng bắn dây rút" },
+	{ value: "mo_vit", label: "Mỏ vịt" },
+];
 
-const UpdatePositionModal = ({ show = false, onClose = () => {}, position = {}}) => {
+const ROLE_OPTIONS = [
+	{ value: "", label: "-- Không chọn --" },
+	{ value: "tape", label: "tape - Quấn băng keo" },
+	{ value: "layout", label: "layout - Trải dây" },
+	{ value: "sub", label: "sub - Cắm dây điện" },
+];
+
+const UpdatePositionModal = ({ onClose = () => {}, onUpdated = () => {}, position = {}}) => {
     const [formData, setFormData] = useState({});
-    const [processes, setProcesses] = useState({});
+    const [processes, setProcesses] = useState([]);
     
     const fetchProcess = async () => {
         try {
@@ -23,11 +37,11 @@ const UpdatePositionModal = ({ show = false, onClose = () => {}, position = {}})
     };
 
     useEffect(() => {
-        if (position) setFormData(position);
+        if (position && Object.keys(position).length > 0) {
+            setFormData(position);
+        }
         fetchProcess();
     }, [position]);
-
-    if (!position) return null;
 
     const handleChange = e => {
         const { name, value, files } = e.target;
@@ -38,109 +52,109 @@ const UpdatePositionModal = ({ show = false, onClose = () => {}, position = {}})
         }));
     };
 
-    const validateFormData = (data) => {
-        const errors = [];
-
-        if (!data.full_name || data.full_name.trim() === "") {
-            errors.push("Họ và tên không được để trống.");
-        }
-
-        if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-            errors.push("Email không hợp lệ.");
-        }
-
-        if (data.phone && !/^\d{9,15}$/.test(data.phone)) {
-            errors.push("Số điện thoại không hợp lệ (chỉ chứa 9-15 chữ số).");
-        }
-
-        if (data.date_of_birth && isNaN(new Date(data.date_of_birth).getTime())) {
-            errors.push("Ngày sinh không hợp lệ.");
-        }
-
-        if (data.start_date && isNaN(new Date(data.start_date).getTime())) {
-            errors.push("Ngày bắt đầu không hợp lệ.");
-        }
-
-        return errors;
-    };
-
     const handleUpdate = async e => {
         e.preventDefault();
 
-        const errors = validateFormData(formData);
-        if (errors.length > 0) {
-            errors.forEach(err => toast.error(err));
-            return;
-        }
-
         const data = new FormData();
-        for (const key in formData) {
-            if (key !== "staff_id" && key !== "avatar") { 
-                if (formData[key] !== staff[key]) {
-                    data.append(key, formData[key]);
-                }
-            }
-        }
+        const { position_id, code, role, tools, process_id } = formData;
 
+        data.append("position_id", position_id);
+        data.append("code", code);
+        data.append("role", role);
+        data.append("tools", tools);
+        data.append("process_id", process_id);
+
+        console.log("📦 Dữ liệu gửi lên server:");
+        for (let [key, value] of data.entries()) {
+            console.log(`${key}:`, value);
+        }
         try {
             const res = await positionService.updatePosition(position.position_id, data);
             if (res?.EC === 0) {
-                toast.success(res.EM || "Cập nhật nhân viên thành công");
-                setFormData(res.DT);
-                onClose(res.DT);
-            } else {
-                toast.error(res.EM || "Cập nhật thất bại");
-                console.error("Lỗi khi cập nhật:", res);
-            }
+                toast.success(res.EM || "Cập nhật vị trí thành công");
+                onUpdated(res.DT);
+				onClose()
+            } else toast.error(res.EM || "Cập nhật thất bại");
         } catch (err) {
-            toast.error("Cập nhật thất bại: Lỗi kết nối");
             console.error("Lỗi khi cập nhật:", err);
+            toast.error("Cập nhật thất bại: Lỗi kết nối");
         }
     };
 
     return (
-        <div className={`modal fade ${show ? "show d-block" : "d-none"}`} tabIndex="-1"
-            style={{ backgroundColor: show ? "rgba(0,0,0,0.5)" : "transparent" }}>
-            <div className="modal-dialog modal-lg modal-dialog-centered">
-                <div className="modal-content border-0">
-                    <div className="modal-header" style={{ backgroundColor: "#02437D", color: "#fff" }}>
-                        <h5 className="modal-title">Cập nhật thông tin vị trí</h5>
-                        <CloseButton size="small" className="btn-close" onClick={onClose} />
-                    </div>
+        <motion.div
+			initial={{ opacity: 0, x: -50 }}
+			animate={{ opacity: 1, x: 0 }}
+			transition={{ duration: 0.3, delay: 0.3, ease: "easeInOut" }}
+			className="card shadow-sm"
+			style={{ backgroundColor: "#02437D", color: "#fff", borderColor: "transparent" }}
+		>
+            <div className="card shadow-sm" style={{ borderColor: "transparent" }}>
+                <div className="card-header fw-bold d-flex justify-content-between align-items-center" style={{ backgroundColor: "#02437D", color: "#fff" }}>
+                    Cập nhật thông tin vị trí
+                    <CloseButton size="small" onClick={onClose} />
+                </div>
+                <div className="card-body" style={{ color: "#02437D" }}>
+                    {/* Form nội dung */}
+                    <form onSubmit={handleUpdate}>
+                        <div className="py-3">
+                            <div className="row g-3">
+                                <div className="col-md-6">
+                                    <TextField
+                                        label="Mã hiệu"
+                                        name="code"
+                                        value={formData.code || ""}
+                                        onChange={handleChange}
+                                        fullWidth
+                                    />
+                                </div>
 
-                    <div className="modal-body">
-                        <form onSubmit={handleUpdate}>
-                            <div className="row row-cols-2 g-3">
-                                <div className="col-12 text-center mb-3">
-                                    <div className="d-flex flex-column align-items-center">
-                                        <Avatar src={formData.avatar ? (typeof formData.avatar === "string" ? `http://localhost:3001/${formData.avatar}` : URL.createObjectURL(formData.avatar)) : ""} alt="avatar" sx={{ width: 180, height: 180, mb: 2 }} />
-                                        <FileButton type="file" name="avatar" accept="image/*" onChange={handleChange} />
-                                    </div>
+                                <div className="col-md-6">
+                                    <TextField
+                                        label="Vai trò"
+                                        name="role"
+                                        value={formData.role || ""}
+                                        onChange={handleChange}
+                                        fullWidth
+                                    >
+                                        {ROLE_OPTIONS.map((r) => (
+                                            <MenuItem key={r.value} value={r.value}>
+                                                {r.label}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </div>
-                                <div className="col">
-                                    <TextField label="Họ và tên" name="full_name" value={formData.full_name || ""} onChange={handleChange} fullWidth required />
+
+                                <div className="col-12">
+                                    <TextField
+                                        select
+                                        label="Công cụ"
+                                        name="tools"
+                                        value={formData.tools || ""}
+                                        onChange={handleChange}
+                                        fullWidth
+                                    >
+                                        {TOOL_OPTIONS.map((t) => (
+                                            <MenuItem key={t.value} value={t.value}>
+                                                {t.label}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </div>
-                                <div className="col">
-                                    <TextField label="Email" type="email" name="email" value={formData.email || ""} onChange={handleChange} fullWidth />
-                                </div>
-                                <div className="col">
-                                    <TextField label="Số điện thoại" name="phone" value={formData.phone || ""} onChange={handleChange} fullWidth />
-                                </div>
-                                <div className="col">
-                                    <TextField label="Ngày sinh" type="date" name="date_of_birth" value={formData.date_of_birth || ""} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} />
-                                </div>
-                                <div className="col">
-                                    <TextField label="Ngày bắt đầu" type="date" name="start_date" value={formData.start_date || ""} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} />
-                                </div>
-                                <div className="col">
-                                    <TextField label="Phòng ban" name="department" value={formData.department || ""} fullWidth InputProps={{ readOnly: true }} />
-                                </div>
-                                <div className="col">
-                                    <TextField select label="Thao tác" name="process_id" value={formData.process_id || ""} onChange={handleChange} fullWidth>
+
+                                <div className="col-12">
+                                    <TextField
+                                        select
+                                        label="Thao tác"
+                                        name="process_id"
+                                        value={formData.process_id || ""}   // không dùng position_id
+                                        onChange={handleChange}
+                                        fullWidth
+                                    >
                                         {processes.length > 0 ? (
-                                            processes.map(p => (
+                                            processes.map((p) => (
                                                 <MenuItem key={p.process_id} value={p.process_id}>
-                                                    {p.name} - {p.descrition}
+                                                    {p.name}
                                                 </MenuItem>
                                             ))
                                         ) : (
@@ -148,25 +162,18 @@ const UpdatePositionModal = ({ show = false, onClose = () => {}, position = {}})
                                         )}
                                     </TextField>
                                 </div>
-                                <div className="col">
-                                    <TextField select label="Trạng thái" name="status" value={formData.status || ""} onChange={handleChange} fullWidth>
-                                        <MenuItem value="active">Đang làm việc</MenuItem>
-                                        <MenuItem value="inactive">Ngừng làm việc</MenuItem>
-                                    </TextField>
-                                </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
 
-                    <div className="modal-footer">
-                        <CloseButton onClick={onClose} />
-                        <ConfirmButton type="submit" onClick={handleUpdate}>
-                            Lưu thay đổi
-                        </ConfirmButton>
-                    </div>
+                        {/* Footer */}
+                        <div className="d-flex justify-content-end gap-2 border-top pt-3">
+                            <CloseButton onClick={onClose} />
+                            <ConfirmButton type="submit">Lưu thay đổi</ConfirmButton>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

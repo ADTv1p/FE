@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { AddButton, ConfirmButton, CloseButton, DeleteButton, EditButton } from '../../common/ActionButtons';
+import { AddButton, ConfirmButton, CloseButton } from '../../common/ActionButtons';
 
 const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [], positions = [] }) => {
 	const [formData, setFormData] = useState({
@@ -170,7 +170,7 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                                         onClick={() => setShowStaffModal(true)}
                                         style={{ width: "11.5em" }}
                                     >
-                                        Chọn người tao tác lỗi
+                                        Chọn người thao tác lỗi
                                     </button>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
 
                             <div className="col-12 d-grid">
                                 <ConfirmButton type="submit">
-                                    Báo cáo lỗi
+                                    Báo cáo sự cố
                                 </ConfirmButton>
                             </div>
                         </div>

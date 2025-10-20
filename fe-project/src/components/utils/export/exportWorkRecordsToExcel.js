@@ -5,7 +5,7 @@ const exportWorkRecordsToExcel = (workRecords, fileName = "BaoCaoLoi.xlsx") => {
 	if (!Array.isArray(workRecords) || workRecords.length === 0) return;
 
 	const data = workRecords.map(record => ({
-		"ID báo cáo lỗi": record.work_record_id,
+		"ID báo cáo sự cố": record.work_record_id,
 		"Ghi chú": record.note,
 		"ID Lỗi": record.error?.error_id,
 		"Tên lỗi": record.error?.name,

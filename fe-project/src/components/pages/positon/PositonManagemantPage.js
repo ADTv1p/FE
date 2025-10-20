@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,11 +10,13 @@ import PositionTable from "./PositionTable";
 import Pagination from "../../common/Pagination"; 
 import { AddButton, BackButton } from "../../common/ActionButtons";
 import ExportButton from "../../common/ExportButton";
+import UpdatePositionModal from "./UpdatePositionModal";
 
 const PositionManagement = () => {
 	const navigate = useNavigate();
 	const [positions, setPositions] = useState([]);
 	const [selectedPosition, setSelectedPosition] = useState(null);
+	const [view, setView] = useState(null);
 	const [page, setPage] = useState(1);
 	const itemsPerPage = 10;
 
@@ -50,9 +53,9 @@ const PositionManagement = () => {
 					<AddButton className="me-2" onClick={() => navigate("/them-vi-tri")}>
 						Thêm Vị trí
 					</AddButton>
-					<ExportButton className="me-2"> 
-						Xuất Danh Sách
-					</ExportButton>
+						{/* <ExportButton className="me-2"> 
+							Xuất Danh Sách
+						</ExportButton> */}
 					<BackButton onClick={() => window.history.back()}>
 						Quay lại
 					</BackButton>
@@ -60,13 +63,24 @@ const PositionManagement = () => {
 			</div>
 
 			<div className="row g-3">
-				<div className={selectedPosition ? "col-8" : "col-12"}>
+				<motion.div
+					style={{ width: "100%" }}
+					animate={{ width: view ? "66.6666666%" : "100%" }}
+					transition={{ duration: 0.3 }}
+				>
 					<div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
 						<div className="card-body">
 							<h5 className="card-title fw-bold mb-3">Bảng danh sách</h5>
-							<PositionTable 
+							<PositionTable
 								positions={paginatedPositions}
-								onView={setSelectedPosition} 
+								onView={(position) => {
+									setSelectedPosition(position);
+									setView('view');
+								}}
+								onUpdate={(position) => {
+									setSelectedPosition(position);
+									setView('update');
+								}}
 							/>
 							<Pagination 
 								page={page}
@@ -75,16 +89,24 @@ const PositionManagement = () => {
 							/>
 						</div>
 					</div>
-				</div>
+				</motion.div>
 
-				{selectedPosition && (
-					<div className="col">
-						<ViewPosition
-							position={selectedPosition}
-							onClose={() => setSelectedPosition(null)}
-						/>
-					</div>
-				)}
+			{view === 'view' && (
+				<div className="col-4">
+					<ViewPosition
+						position={selectedPosition}
+						onClose={() => setView(null)}
+					/>
+				</div>
+			)}
+			{view === 'update' && (
+				<div className="col-4">
+					<UpdatePositionModal
+						position={selectedPosition}
+						onClose={() => setView(null)}
+					/>
+				</div>
+			)}
 			</div>
 		</div>
 	);

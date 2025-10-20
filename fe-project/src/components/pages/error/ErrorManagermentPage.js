@@ -66,7 +66,7 @@ const ErrorManagement = () => {
             <div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
                 <Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
                     <Report fontSize="large" />
-                    QUẢN LÝ LỖI
+                    QUẢN LÝ SỰ CỐ
                 </Typography>
                  <div>
                     <ExportButton

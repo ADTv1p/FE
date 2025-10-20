@@ -15,7 +15,7 @@ export default function MuiBarChart({ items = [] }) {
 					series={[
 						{
 							data: dataValues,
-							label: "Số lỗi",
+							label: "Số sự cố",
 							color: "#02437D"
 						}
 					]}

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import AddAccessory from "./AddAccessory";
 import UpdateAccessory from "./UpdateAccessory";
 import accessoryService from "../../../services/accessoryService";
-import { AddButton, EditButton, DeleteButton, BackButton } from '../../common/ActionButtons';
+import { AddButton, EditButton, BackButton } from '../../common/ActionButtons';
 import { Typography } from "@mui/material";
 import { Build } from "@mui/icons-material";
 import IfLoading from "../../common/IfLoading";
@@ -74,11 +74,6 @@ const AccessoryManagement = () => {
         }
     };
     
-    // Thêm hàm xóa để đảm bảo các nút hành động đều có logic
-    const handleDeleteAccessory = (accessoryId) => {
-        toast.info("Chức năng xóa đang được phát triển.");
-    };
-
     if (loading) return <IfLoading />;
     if (error) return <IfError />;
 
@@ -131,10 +126,6 @@ const AccessoryManagement = () => {
                                                                 setSelectedAccessory(item);
                                                                 setShowForm("update");
                                                             }}
-                                                        />
-                                                        <DeleteButton 
-                                                            size="small" 
-                                                            onClick={() => handleDeleteAccessory(item.accessory_id)} 
                                                         />
                                                     </td>
                                                 </tr>

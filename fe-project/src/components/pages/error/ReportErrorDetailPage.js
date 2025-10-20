@@ -69,7 +69,7 @@ const ReportErrorDetail = () => {
 			<div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
                 <Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
                     <Report fontSize="large" />
-                    THÔNG TIN LỖI
+                    THÔNG TIN SỰ CỐ
                 </Typography>
                  <div>
                    <ExportButton className="me-2" onClick={() => exportWorkRecordToWord(workRecord)}>
@@ -126,13 +126,13 @@ const ReportErrorDetail = () => {
 					<div className="mb-4">
 						<div className="card shadow-sm" style={{ borderColor: "transparent", borderColor: "#B22222"  }}>
 							<div className="card-header fw-bold fs-4 text-center" style={{ backgroundColor: "#B22222", color: "#fff" }}>
-								Thông tin lỗi & Báo cáo lỗi
+								Thông tin sự cố & Báo cáo sự cố
 							</div>
 							<div className="card-body" style={{ color: "#B22222" }}>
 								<div className="d-flex gap-3 flex-wrap align-items-stretch">
 									<div className="rounded p-2" style={{ flex: "1 1 0", border: "1px solid #B22222" }}>
-										<ErrorRow label="ID lỗi" value={workRecord.error?.error_id} />
-										<ErrorRow label="Tên lỗi" value={workRecord.error?.name} />
+										<ErrorRow label="ID sự cố" value={workRecord.error?.error_id} />
+										<ErrorRow label="Tên sự cố" value={workRecord.error?.name} />
 										<ErrorRow label="Mô tả" value={workRecord.error?.description} />
 										<ErrorRow label="Tạo" value={new Date(workRecord.error?.createdAt).toLocaleString()} />
 										<ErrorRow label="Cập nhật" value={new Date(workRecord.error?.updatedAt).toLocaleString()} />

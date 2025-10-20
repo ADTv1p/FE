@@ -5,10 +5,19 @@ import staffService from "../../../services/staffService";
 import { toast } from "react-toastify";
 import positionService from "../../../services/positionService";
 
-const EditStaffModal = ({ show = false, onClose = () => {}, staff = {}}) => {
+const EditStaffModal = ({ show = false, onClose = () => {}, onUpdate, staff = {}}) => {
 	const [formData, setFormData] = useState({});
 	const [positions, setPositions] = useState({});
-    
+    const [preview, setPreview] = useState("");
+
+	const handleFileChange = (e) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			setFormData({ ...formData, avatar: file });
+			setPreview(URL.createObjectURL(file)); // ✅ tạo URL preview mới
+		}
+	};
+
     const fetchPositions = async () => {
         try {
             const res = await positionService.getAllPositions();
@@ -63,38 +72,41 @@ const EditStaffModal = ({ show = false, onClose = () => {}, staff = {}}) => {
     };
 
 	const handleUpdate = async e => {
-        e.preventDefault();
+		e.preventDefault();
 
-        const errors = validateFormData(formData);
-        if (errors.length > 0) {
-            errors.forEach(err => toast.error(err));
-            return;
-        }
+		const errors = validateFormData(formData);
+		if (errors.length > 0) {
+			errors.forEach(err => toast.error(err));
+			return;
+		}
 
-        const data = new FormData();
-        for (const key in formData) {
-            if (key !== "staff_id" && key !== "avatar") { 
-                if (formData[key] !== staff[key]) {
-                    data.append(key, formData[key]);
-                }
-            }
-        }
+		const { avatar: avatarFile, ...otherFields } = formData;
+		const data = new FormData();
 
-        try {
-            const res = await staffService.updateStaff(staff.staff_id, data);
-            if (res?.EC === 0) {
-                toast.success(res.EM || "Cập nhật nhân viên thành công");
-                setFormData(res.DT);
-                onClose(res.DT);
-            } else {
-                toast.error(res.EM || "Cập nhật thất bại");
-                console.error("Lỗi khi cập nhật:", res);
-            }
-        } catch (err) {
-            toast.error("Cập nhật thất bại: Lỗi kết nối");
-            console.error("Lỗi khi cập nhật:", err);
-        }
-    };
+		Object.entries(otherFields).forEach(([key, value]) => {
+			if (key !== "staff_id" && value !== staff[key]) {
+				data.append(key, value);
+			}
+		});
+
+		const avatar = avatarFile instanceof File ? avatarFile : null;
+
+		try {
+			const res = await staffService.updateStaff(staff.staff_id, avatar, data);
+			if (res?.EC === 0) {
+				toast.success(res.EM || "Cập nhật nhân viên thành công");
+				setFormData(res.DT);
+				onUpdate && onUpdate(res.DT);
+				onClose();                    
+			} else {
+				toast.error(res.EM || "Cập nhật thất bại");
+				console.error("Lỗi khi cập nhật:", res);
+			}
+		} catch (err) {
+			toast.error("Cập nhật thất bại: Lỗi kết nối");
+			console.error("Lỗi khi cập nhật:", err);
+		}
+	};
 
 	return (
 		<div className={`modal fade ${show ? "show d-block" : "d-none"}`} tabIndex="-1"
@@ -111,10 +123,26 @@ const EditStaffModal = ({ show = false, onClose = () => {}, staff = {}}) => {
 							<div className="row row-cols-2 g-3">
 								<div className="col-12 text-center mb-3">
 									<div className="d-flex flex-column align-items-center">
-										<Avatar src={formData.avatar ? (typeof formData.avatar === "string" ? `http://localhost:3001/${formData.avatar}` : URL.createObjectURL(formData.avatar)) : ""} alt="avatar" sx={{ width: 180, height: 180, mb: 2 }} />
-										<FileButton type="file" name="avatar" accept="image/*" onChange={handleChange} />
+										<Avatar
+											src={
+												preview
+													? preview
+													: formData.avatar
+													? `http://localhost:3001/${formData.avatar}`
+													: ""
+											}
+											alt="avatar"
+											sx={{ width: 180, height: 180, mb: 2 }}
+										/>
+										<FileButton
+											type="file"
+											name="avatar"
+											accept="image/*"
+											onChange={handleFileChange} 
+										/>
 									</div>
 								</div>
+
 								<div className="col">
 									<TextField label="Họ và tên" name="full_name" value={formData.full_name || ""} onChange={handleChange} fullWidth required />
 								</div>

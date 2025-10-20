@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DeleteButton, EditButton } from "../../common/ActionButtons";
+import { EditButton } from "../../common/ActionButtons";
 import { Avatar, Stack } from "@mui/material";
 import EditStaffModal from './EditStaffModal';
 
-const StaffTable = ({ staffs }) => {
+const StaffTable = ({ staffs, onUpdate }) => {
 	const navigate = useNavigate();
 	const [showEditStaffModal, setShowEditStaffModal] = useState(false);
 	const [selectedStaff, setSelectedStaff] = useState(null);
@@ -50,16 +50,13 @@ const StaffTable = ({ staffs }) => {
 											className={`badge ${
 												staff.status === "active"
 													? "bg-success"
-													: staff.status === "inactive"
-													? "bg-warning"
 													: "bg-danger"
 											}`}
 										>
 											{staff.status === "active"
 												? "Đang làm"
-												: staff.status === "inactive"
-												? "Ngừng làm"
-												: "Đã nghỉ"}
+												: "Đã nghỉ việc"
+											}
 										</span>
 									</td>
 									<td className="text-center">
@@ -74,7 +71,6 @@ const StaffTable = ({ staffs }) => {
 										>
 											Sửa
 										</EditButton>
-										<DeleteButton size="small">Xóa</DeleteButton>
 									</td>
 								</tr>
 							))
@@ -91,8 +87,10 @@ const StaffTable = ({ staffs }) => {
 
 			<EditStaffModal
 				show={showEditStaffModal}
-				onClose={() => {
-					setShowEditStaffModal(false);
+				onClose={() => setShowEditStaffModal(false)}
+				onUpdate={(updatedStaff) => {
+					setSelectedStaff(updatedStaff);
+					onUpdate && onUpdate();
 				}}
 				staff={selectedStaff}
 			/>

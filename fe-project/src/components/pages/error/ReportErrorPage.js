@@ -22,7 +22,7 @@ const ReportError = () => {
 			if (res?.EC === 0) {
 				setErrors(res?.DT);
 			} else {
-				toast.warning(res?.EM || "Không thể lấy danh sách lỗi!");
+				toast.warning(res?.EM || "Không thể lấy danh sách báo cáo!");
 			}
 		} catch (err) {
 			console.error("Lỗi khi lấy danh sách lỗi:", err);
@@ -108,7 +108,7 @@ const ReportError = () => {
 			<div className="card shadow-sm p-3 mb-3 d-flex flex-row justify-content-between align-items-center" style={{ border: "1px solid #02437D"}}>
                 <Typography variant="h4" display="flex" alignItems="center" gap={2} sx={{ color: "#02437D" }}>
                     <Report fontSize="large" />
-                    BÁO CÁO LỖI
+                    BÁO CÁO SỰ CỐ
                 </Typography>
 				<BackButton onClick={() => window.history.back()}>
 					Quay lại

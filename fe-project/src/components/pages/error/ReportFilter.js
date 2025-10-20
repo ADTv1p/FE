@@ -37,7 +37,7 @@ const ReportFilter = ({ workRecordList, onFilter }) => {
 		<div className="card shadow-sm" style={{ borderColor: "#02437D" }}>
 			<div className="card-header fw-bold d-flex justify-content-between align-items-center" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
 				<>
-					<span>Lọc B/C lỗi</span>
+					<span>Lọc B/C sự cố</span>
 					<span className="badge bg-danger ms-2 rounded-circle">{workRecordList.length}</span>
 				</>
 				<FilterButton onClick={handleClearFilter}>

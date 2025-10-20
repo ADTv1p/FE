@@ -1,5 +1,6 @@
 import axios from '../axiosConfig';
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 const getAllProcesses = async () => {
     try {
         const response = await axios.get("/processes/list");
@@ -9,6 +10,8 @@ const getAllProcesses = async () => {
         throw error;
     }
 };
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 const getSupportProccesses = async () => {
     try {
         const response = await axios.get("/processes/support/list");
@@ -18,6 +21,8 @@ const getSupportProccesses = async () => {
         throw error;
     }
 };
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 const createProcess = async (data) => {
 	try {
 		const response = await axios.post("/processes/create", data);
@@ -28,6 +33,7 @@ const createProcess = async (data) => {
 	}
 };
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 const updateProcess = async (updatedData) => {
 	try {
 		const response = await axios.put(`/processes/${updatedData.process_id}`, updatedData);
@@ -38,7 +44,19 @@ const updateProcess = async (updatedData) => {
 	}
 };
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+const replaceAndDeleteProcess = async (data) => {
+	try {
+		// data gồm { old_process_id, new_process_id }
+		const response = await axios.post("/processes/replace-and-delete", data);
+		return response;
+	} catch (error) {
+		console.error("Lỗi khi gọi API POST /api/processes/replace-and-delete:", error);
+		throw error;
+	}
+};
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 const deleteProcess = async (process_id) => {
 	try {
 		const response = await axios.delete(`/processes/${process_id}`);
@@ -49,8 +67,12 @@ const deleteProcess = async (process_id) => {
 	}
 };
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 export default { 
 	getAllProcesses,
     getSupportProccesses,
-    createProcess, updateProcess, deleteProcess
+    createProcess,
+	updateProcess, 
+	replaceAndDeleteProcess,
+	deleteProcess
 };

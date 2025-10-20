@@ -6,7 +6,7 @@ const StatisticsSidebar = () => {
 	const location = useLocation(); // <-- lấy route hiện tại
 
 	const statisticsLinks = [
-		{ name: "Thống kê lỗi", path: "/thong-ke-loi" },
+		{ name: "Thống kê sự cố", path: "/thong-ke-loi" },
 		{ name: "Thống kê thao tác", path: "/thong-ke-thao-tac" },
 	];
 

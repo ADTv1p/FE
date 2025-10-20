@@ -1,6 +1,8 @@
 // src/pages/AddStaff.js
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { BackButton } from "../../common/ActionButtons";
 import positionService from "../../../services/positionService";
 import staffService from "../../../services/staffService";
 import { ConfirmButton, FileButton } from "../../common/ActionButtons";
@@ -8,16 +10,10 @@ import { Typography, TextField, MenuItem, Avatar, Stack , Button } from "@mui/ma
 
 import { PersonAdd  } from '@mui/icons-material';
 
-const STATUS_OPTIONS = [
-	{ value: "active", label: "Đang làm việc" },
-	{ value: "inactive", label: "Ngừng làm việc" },
-	{ value: "resigned", label: "Từ chức" },
-	{ value: "suspended", label: "Đình chỉ" },
-];
-
 const today = new Date().toISOString().split("T")[0]
 
 const AddStaff = () => {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		full_name: "",
 		email: "",
@@ -76,19 +72,9 @@ const AddStaff = () => {
 			const res = await staffService.createStaff(formData);
 			if (res?.EC === 0) {
 				toast.success("Thêm nhân sự thành công!");
-				// reset form nếu cần
-				setFormData({
-					full_name: "",
-					email: "",
-					phone: "",
-					position_id: "",
-					department: "Nhân viên thao tác",
-					date_of_birth: "",
-					start_date: new Date().toISOString().split("T")[0],
-					status: "active",
-					avatar: null,
-				});
-				setPreview(null);
+				navigate("/quan-ly-nhan-su");
+			} else if (res?.EC === 1) {
+				toast.warn(res?.EM || "Dữ liệu đã tồn tại!");
 			} else {
 				toast.error(res?.EM || "Thêm nhân sự thất bại!");
 			}
@@ -106,6 +92,7 @@ const AddStaff = () => {
 					<PersonAdd  fontSize="large" />
 					THÊM NHÂN SỰ MỚI
 				</Typography>
+				<BackButton onClick={() => window.history.back()} />
 			</div>
 
 			<div className="card shadow-sm p-3 mb-3">

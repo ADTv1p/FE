@@ -30,16 +30,14 @@ const Header = () => {
 					<ul className="navbar-nav ms-auto">
 						{isLoggedIn && (
 							<>
-								<li className="nav-item dropdown">
-									<a className="nav-link dropdown-toggle" href="#" id="staffDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Nhân sự</a>
-									<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="staffDropdown">
+								<li className="nav-item dropdown" style={{ position: "relative", zIndex: 1055 }}>
+									<a className="nav-link dropdown-toggle" href="#" id="processDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Nhân sự</a>
+									<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="processDropdown">
 										<li><a className="dropdown-item" href="/quan-ly-nhan-su">Quản lý nhân sự</a></li>
-										<li><a className="dropdown-item" href="/them-nhan-su">Thêm nhân sự</a></li>
-										<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #02437D" }} /></li>
 										<li><a className="dropdown-item" href="/quan-ly-vi-tri">Quản lý vị trí</a></li>
-										<li><a className="dropdown-item" href="/them-vi-tri">Thêm vị trí</a></li>
 									</ul>
 								</li>
+
 								<li className="nav-item dropdown" style={{ position: "relative", zIndex: 1055 }}>
 									<a className="nav-link dropdown-toggle" href="#" id="processDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fas fa-users me-1"></i>Thao tác</a>
 									<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="processDropdown">
@@ -51,12 +49,12 @@ const Header = () => {
 								</li>
 
 								<li className="nav-item dropdown">
-									<a className="nav-link dropdown-toggle" href="#" id="errorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Lỗi thao tác</a>
+									<a className="nav-link dropdown-toggle" href="#" id="errorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sự cố</a>
 									<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="errorDropdown">
-										<li><a className="dropdown-item" href="/quan-ly-loi">Quản lý lỗi</a></li>
-										<li><a className="dropdown-item" href="/bao-cao-loi">Báo cáo lỗi</a></li>
+										<li><a className="dropdown-item" href="/quan-ly-loi">Quản lý Sự cố</a></li>
+										<li><a className="dropdown-item" href="/bao-cao-loi">Báo cáo Sự cố</a></li>
 										<li><hr className="dropdown-divider" style={{ borderTop: "1px solid #02437D" }} /></li>
-										<li><a className="dropdown-item" href="/thong-ke-loi">Thống kê lỗi</a></li>
+										<li><a className="dropdown-item" href="/thong-ke-loi">Thống kê Sự cố</a></li>
 									</ul>
 								</li>
 								{!isLoginPage && !isRegisterPage && isLoggedIn && (

@@ -1,6 +1,6 @@
-import { DeleteButton, DetailButton, EditButton } from "../../common/ActionButtons";
+import { EditButton } from "../../common/ActionButtons";
 
-const PositionTable = ({ positions, onView }) => {
+const PositionTable = ({ positions, onView, onUpdate }) => {
 	return (
 		<table className="table table-hover">
 			<thead className="text-center">
@@ -14,7 +14,7 @@ const PositionTable = ({ positions, onView }) => {
 				</tr>
 			</thead>
 			<tbody>
-				{positions?.length > 0 ? (
+				{Array.isArray(positions) && positions.length > 0 ? (
 					positions.map((p, index) => (
 						<tr key={p.position_id} style={{ cursor: "pointer" }} onClick={() => onView(p)}>
 							<td className="text-center">{index + 1}</td>
@@ -32,27 +32,16 @@ const PositionTable = ({ positions, onView }) => {
 									size="small" 
 									onClick={(e) => {
 										e.stopPropagation(); 
+										onUpdate(p);
 									}}
 								>
 									Sửa
 								</EditButton>
-								<DeleteButton 
-									size="small" 
-									onClick={(e) => {
-										e.stopPropagation(); 
-									}}
-								>
-									Xóa
-								</DeleteButton>
 							</td>
 						</tr>
 					))
 				) : (
-					<tr>
-						<td colSpan="6" className="text-center text-muted">
-							Chưa có vị trí nào
-						</td>
-					</tr>
+					<tr><td colSpan="6" className="text-center text-muted">Chưa có vị trí nào</td></tr>
 				)}
 			</tbody>
 		</table>

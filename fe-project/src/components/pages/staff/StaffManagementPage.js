@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation , useNavigate} from "react-router-dom";
 import StaffTable from "./StaffTable";
 import StaffFilter from "./StaffFilter";
 import staffService from "../../../services/staffService";
 import { toast } from "react-toastify";
 import { Typography } from "@mui/material";
 import { People } from '@mui/icons-material';
+import { AddButton } from "../../common/ActionButtons";
 import Pagination from "../../common/Pagination";
 import IfLoading from "../../common/IfLoading";
 import IfError from "../../common/IfError";
 
 const StaffManagement = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const params = new URLSearchParams(location.search);
 	const position_code = params.get("position_code");
@@ -43,27 +45,28 @@ const StaffManagement = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 
-	useEffect(() => {
-		const fetchStaffs = async () => {
-			setLoading(true);
-			try {
-				const res = await staffService.getAllStaffs();
-				if (res?.EC === 0) {
-					setAllStaffs(res.DT);
-					setStaffs(res.DT);
-				} else {
-					toast.warn("Không có dữ liệu nhân sự!");
-					setStaffs([]);
-					setAllStaffs([]);
-				}
-			} catch (err) {
-				console.error("Lỗi tải nhân sự:", err);
-				toast.error("Lỗi khi tải danh sách nhân sự.");
-				setError(true);
-			} finally {
-				setLoading(false);
+	const fetchStaffs = async () => {
+		setLoading(true);
+		try {
+			const res = await staffService.getAllStaffs();
+			if (res?.EC === 0) {
+				setAllStaffs(res.DT);
+				setStaffs(res.DT);
+			} else {
+				toast.warn("Không có dữ liệu nhân sự!");
+				setStaffs([]);
+				setAllStaffs([]);
 			}
-		};
+		} catch (err) {
+			console.error("Lỗi tải nhân sự:", err);
+			toast.error("Lỗi khi tải danh sách nhân sự.");
+			setError(true);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
 		fetchStaffs();
 	}, []);
 	
@@ -112,10 +115,13 @@ const StaffManagement = () => {
 					<People fontSize="large" />
 					NHÂN SỰ
 				</Typography>
+				<AddButton onClick={() => navigate('/them-nhan-su')}>
+					Thêm nhân sự
+				</AddButton>
 			</div>
 			<div className="card p-3 mb-3" style={{ border: "1px solid #02437D"}}>
 				<StaffFilter search={search} onChange={handleSearchChange} />
-				<StaffTable staffs={paginatedStaffs} />
+				<StaffTable staffs={paginatedStaffs} onUpdate={() => fetchStaffs()}  />
 				<Pagination 
 					page={page}
 					count={totalPages}

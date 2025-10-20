@@ -33,4 +33,14 @@ const createPosition = async (data) => {
 	}
 };
 
-export default { getSupportPositions, getAllPositions, createPosition };
+const updatePosition = async (positionId, data) => {
+	try {
+		const response = await axios.post(`/positions/${positionId}/update`, data);
+		return response;
+	} catch (error) {
+		console.error("Lỗi khi gọi API POST /api/positions:", error);
+		throw error;
+	}
+};
+
+export default { getSupportPositions, getAllPositions, createPosition, updatePosition };
