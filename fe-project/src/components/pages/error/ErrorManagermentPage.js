@@ -5,7 +5,6 @@ import ReportErrorList from "./ReportErrorList";
 import ReportFilter from "./ReportFilter";
 import ExportButton from "../../common/ExportButton";
 import exportWorkRecordsToExcel from "../../utils/export/exportWorkRecordsToExcel";
-import { BackButton } from "../../common/ActionButtons";
 import { Typography } from "@mui/material";
 import { Report } from "@mui/icons-material";
 
@@ -76,9 +75,6 @@ const ErrorManagement = () => {
                         >
                         Xuất Danh Sách Báo Cáo
                     </ExportButton>
-                    <BackButton onClick={() => window.history.back()}>
-                        Quay lại
-                    </BackButton>
                 </div>
             </div>
             

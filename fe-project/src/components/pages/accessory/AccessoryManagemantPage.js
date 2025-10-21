@@ -5,7 +5,8 @@ import { toast } from "react-toastify";
 import AddAccessory from "./AddAccessory";
 import UpdateAccessory from "./UpdateAccessory";
 import accessoryService from "../../../services/accessoryService";
-import { AddButton, EditButton, BackButton } from '../../common/ActionButtons';
+import { AddButton, EditButton } from '../../common/ActionButtons';
+import Pagination from "../../common/Pagination"; 
 import { Typography } from "@mui/material";
 import { Build } from "@mui/icons-material";
 import IfLoading from "../../common/IfLoading";
@@ -15,36 +16,52 @@ const AccessoryManagement = () => {
     const [accessories, setAccessories] = useState([]);
     const [showForm, setShowForm] = useState(null);
     const [selectedAccessory, setSelectedAccessory] = useState(null);
+	const [page, setPage] = useState(1);
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
-    useEffect(() => {
-        const fetchAccessories = async () => {
-            setLoading(true);
-            try {
-                const res = await accessoryService.getAllAccessories();
-                if (res?.EC === 0) {
-                    setAccessories(res.DT);
-                } else {
-                    toast.warn("Không có dữ liệu phụ kiện.");
-                    setAccessories([]);
-                }
-            } catch (err) {
-                console.error("Lỗi tải phụ kiện:", err);
-                toast.error(err?.response?.data?.EM || "Lỗi khi tải danh sách phụ kiện.");
-                setError(true);
-            } finally {
-                setLoading(false);
+    const itemsPerPage = 10;
+
+	const paginatedAccessories = accessories.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((item, index) => ({
+		...item,
+		stt: (page - 1) * itemsPerPage + index + 1 // Tính STT
+	}));
+
+	const totalPages = Math.ceil(accessories.length / itemsPerPage);
+
+    const fetchAccessories = async () => {
+        setLoading(true);
+        try {
+            const res = await accessoryService.getAllAccessories();
+            if (res?.EC === 0) {
+                setAccessories(res.DT);
+            } else {
+                toast.warn("Không có dữ liệu phụ kiện.");
+                setAccessories([]);
             }
-        };
+        } catch (err) {
+            console.error("Lỗi tải phụ kiện:", err);
+            toast.error(err?.response?.data?.EM || "Lỗi khi tải danh sách phụ kiện.");
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchAccessories();
     }, []);
+
+    const handlePageChange = (newPage) => {
+		setPage(newPage);
+	};
 
     const handleAddAccessory = async (data) => {
         try {
             const res = await accessoryService.createAccessory(data);
             if (res?.EC === 0) {
-                setAccessories((prev) => [...prev, res.DT]);
+                fetchAccessories();
                 setShowForm(null);
                 toast.success("Thêm phụ kiện thành công!");
             } else {
@@ -60,9 +77,7 @@ const AccessoryManagement = () => {
         try {
             const res = await accessoryService.updateAccessory(data);
             if (res?.EC === 0) {
-                setAccessories((prev) =>
-                    prev.map((acc) => (acc.accessory_id === data.accessory_id ? res.DT : acc))
-                );
+                fetchAccessories();
                 setShowForm(null);
                 toast.success("Cập nhật phụ kiện thành công!");
             } else {
@@ -88,9 +103,6 @@ const AccessoryManagement = () => {
                     <AddButton className="me-2" onClick={() => setShowForm("add")}>
                         Thêm phụ kiện
                     </AddButton>
-                    <BackButton onClick={() => window.history.back()}>
-                        Quay lại
-                    </BackButton>
                 </div>
             </div>
 
@@ -102,20 +114,22 @@ const AccessoryManagement = () => {
                 >
                     <div className="card shadow-sm h-100" style={{ backgroundColor: "#fff", color: "#02437D", borderColor: "#02437D" }}>
 						<div className="card-body">
-							<h5 className="card-title fw-bold mb-3">Bảng danh sách</h5>
+							<h5 className="card-title fw-bold mb-3">Bảng danh sách phụ kiện</h5>
                             <div className="table-responsive">
-                                <table className="table table-striped table-bordered">
+                                <table className="table table-hover">
                                     <thead className="text-center">
                                         <tr>
+                                            <th>#</th>
                                             <th>Tên phụ kiện</th>
                                             <th>Loại</th>
                                             <th>Hành động</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {accessories.length > 0 ? (
-                                            accessories.map((item, index) => (
+                                        {paginatedAccessories.length > 0 ? (
+                                            paginatedAccessories.map((item, index) => (
                                                 <tr key={index}>
+                                                    <td className="text-center">{item.stt}</td>
                                                     <td>{item.name}</td>
                                                     <td>{item.type}</td>
                                                     <td className="text-center">
@@ -139,6 +153,12 @@ const AccessoryManagement = () => {
                                         )}
                                     </tbody>
                                 </table>
+
+                                <Pagination 
+                                    page={page}
+                                    count={totalPages}
+                                    onChange={handlePageChange}
+                                />
                             </div>
 						</div>
 					</div>

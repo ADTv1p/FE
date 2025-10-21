@@ -205,10 +205,10 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                                         Thêm lỗi mới
                                     </AddButton>
                                 </div>
-                                <div className="d-flex flex-wrap gap-2">
+                                <div className="d-flex flex-column gap-3 vh-100" style={{ overflowY: "auto" }}>
                                     {errors.length > 0 ? (
                                         errors.map((err) => (
-                                            <div key={err.error_id} className="d-flex flex-column align-items-start">
+                                            <div key={err.error_id}>
                                                 <button
                                                     type="button"
                                                     className={`btn btn-sm ${
@@ -223,6 +223,7 @@ const ReportErrorForm = ({ onSubmit, onShowAddError, errors = [], workOrders = [
                                                 <small className="ms-2">{err.description}</small>
                                             </div>
                                         ))
+
                                     ) : (
                                         <small className="">Không có lỗi nào</small>
                                     )}

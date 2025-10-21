@@ -17,7 +17,7 @@ const PositionTable = ({ positions, onView, onUpdate }) => {
 				{Array.isArray(positions) && positions.length > 0 ? (
 					positions.map((p, index) => (
 						<tr key={p.position_id} style={{ cursor: "pointer" }} onClick={() => onView(p)}>
-							<td className="text-center">{index + 1}</td>
+							<td className="text-center">{p.stt}</td>
 							<td className={!p.code ? "text-danger" : ""}>{p.code || "—"}</td>
 							<td className={!p.role ? "text-danger" : ""}>{p.role || "—"}</td>
 							<td className={!p.process?.name ? "text-danger" : ""}>

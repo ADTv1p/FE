@@ -4,7 +4,6 @@ import StatisticsSidebar from "../../../common/StatisticsSidebar";
 import statisticService from "../../../../services/statisticService";
 import ExportProcessDataToExcel from "../../../utils/export/ExportProcessDataToExcel";
 import ExportButton from "../../../common/ExportButton";
-import { BackButton } from "../../../common/ActionButtons";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import { StackedLineChart } from '@mui/icons-material';
 import IfLoading from "../../../common/IfLoading";
@@ -128,7 +127,6 @@ const ProcessStatistics = () => {
                             >
                                 Xuất báo cáo
                             </ExportButton>
-                            <BackButton />
                         </div>
                     </div>
 

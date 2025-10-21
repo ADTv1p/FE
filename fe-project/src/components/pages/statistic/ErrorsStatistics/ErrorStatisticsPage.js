@@ -4,7 +4,6 @@ import StatisticsSidebar from "../../../common/StatisticsSidebar";
 import statisticService from "../../../../services/statisticService";
 import ExportWorkRecordsStatistic from "../../../utils/export/ExportWorkRecordsStatistic";
 import ExportButton from "../../../common/ExportButton";
-import { BackButton } from "../../../common/ActionButtons";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import { StackedLineChart, ArrowDropDown } from '@mui/icons-material';
 import MuiPieChart from "./PieChart";
@@ -129,9 +128,6 @@ const ErrorStatistics = () => {
                             >
                                 Xuất báo cáo
                             </ExportButton>
-                            <BackButton onClick={() => window.history.back()}>
-                                Quay lại
-                            </BackButton>
                         </div>
                     </div>
 

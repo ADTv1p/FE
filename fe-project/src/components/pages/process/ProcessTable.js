@@ -1,6 +1,4 @@
 // src/components/ProcessTable.js
-import { DeleteButton } from "../../common/ActionButtons";
-
 const ProcessTable = ({ processes, onView }) => {
     return (
         <div className="overflow-hidden">

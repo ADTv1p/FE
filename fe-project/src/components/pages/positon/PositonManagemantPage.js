@@ -8,7 +8,7 @@ import positionService from "../../../services/positionService";
 import ViewPosition from "./ViewPosition";
 import PositionTable from "./PositionTable";
 import Pagination from "../../common/Pagination"; 
-import { AddButton, BackButton } from "../../common/ActionButtons";
+import { AddButton } from "../../common/ActionButtons";
 import ExportButton from "../../common/ExportButton";
 import UpdatePositionModal from "./UpdatePositionModal";
 
@@ -18,6 +18,7 @@ const PositionManagement = () => {
 	const [selectedPosition, setSelectedPosition] = useState(null);
 	const [view, setView] = useState(null);
 	const [page, setPage] = useState(1);
+
 	const itemsPerPage = 10;
 
 	const paginatedPositions = positions.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((item, index) => ({
@@ -56,9 +57,6 @@ const PositionManagement = () => {
 						{/* <ExportButton className="me-2"> 
 							Xuất Danh Sách
 						</ExportButton> */}
-					<BackButton onClick={() => window.history.back()}>
-						Quay lại
-					</BackButton>
 				</div>
 			</div>
 

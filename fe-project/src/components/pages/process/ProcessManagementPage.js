@@ -16,7 +16,7 @@ import processService from "../../../services/processService";
 import accessoryService from "../../../services/accessoryService";
 import processStepService from "../../../services/processStepService";
 
-import { AddButton, BackButton, CloseButton } from "../../common/ActionButtons";
+import { AddButton } from "../../common/ActionButtons";
 import ExportButton from "../../common/ExportButton";
 import IfLoading from "../../common/IfLoading";
 import IfError from "../../common/IfError";
@@ -31,9 +31,6 @@ const ProcessManagement = () => {
 	const [process, setProcess] = useState(null);
 	const [showEdit, setShowEdit] = useState(false);
 	const [filterType, setFilterType] = useState("");
-	const [staffsOfProcess, setStaffsOfProcess] = useState([]);
-	const [replacementProcesses, setReplacementProcesses] = useState([]);
-	const [selectedDeletedProcess, setSelectedDeletedProcess] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [page, setPage] = useState(1);
@@ -41,7 +38,6 @@ const ProcessManagement = () => {
 	const [viewState, setViewState] = useState({
 		selectedProcess: null,
 		selectedStep: null,
-		showReplacement: false,
 		showAddProcessModal: false,
 		showAddStepModal: false
 	});
@@ -108,8 +104,7 @@ const ProcessManagement = () => {
 			const res = await processService.createProcess(data);
 			if (res?.EC === 0) {
                 toast.success("Thêm thao tác thành công!");
-                setProcesses((p) => [...p, res.DT]);
-                setAllProcesses((p) => [...p, res.DT]);
+                fetchProcesses();
                 setViewState((prev) => ({ ...prev, showAddProcessModal: false }));
             } else if (res?.EC === 1) {
                 toast.warning(res.EM || "Dữ liệu đã tồn tại hoặc chưa hợp lệ!");
@@ -139,32 +134,6 @@ const ProcessManagement = () => {
 			} else toast.error("Không thể thêm bước.");
 		} catch {
 			toast.error("Lỗi khi thêm bước.");
-		}
-	};
-
-	const handleDeleteProcess = async (id) => {
-		try {
-			const res = await processService.deleteProcess(id);
-			if (res.EC === 0) {
-				toast.success("Xóa thao tác thành công!");
-				fetchProcesses();
-			} else if (res.EC === 3) {
-				toast.warning("Thao tác có nhân sự khác đang thực hiện!");
-				setStaffsOfProcess(res.DT.staffs || []);
-				setReplacementProcesses(res.DT.otherProcesses || []);
-			} else toast.error(res.EM);
-		} catch {
-			toast.error("Lỗi khi xóa thao tác.");
-		}
-	};
-
-	const handleSelectReplacement = async (item) => {
-		const data = { old_process_id: selectedDeletedProcess, new_process_id: item.process_id };
-		try {
-			const res = await processService.replaceAndDeleteProcess(data);
-			toast[res?.EC === 0 ? "success" : "warning"](res.EM);
-		} catch {
-			toast.error("Lỗi khi thay thế thao tác.");
 		}
 	};
 
@@ -206,7 +175,6 @@ const ProcessManagement = () => {
 				<div>
 					<AddButton className="me-2" onClick={() => setViewState((p) => ({ ...p, showAddProcessModal: true }))}>Thêm Thao tác</AddButton>
 					<ExportButton className="me-2" disabled={!processes.length} onClick={() => ExportProcessListToExcel(allProcesses)}>Xuất Danh Sách</ExportButton>
-					<BackButton onClick={() => window.history.back()}>Quay lại</BackButton>
 				</div>
 			</div>
 
@@ -232,7 +200,6 @@ const ProcessManagement = () => {
 							<ProcessTable
 								processes={paginatedProcesses}
 								onView={(p) => setViewState({ selectedProcess: p, selectedStep: null })}
-								onDelete={(id) => { setSelectedDeletedProcess(id); handleDeleteProcess(id); }}
 								onEdit={(p) => { setProcess(p); setShowEdit(true); }}
 							/>
 							<Pagination page={page} count={totalPages} onChange={handlePageChange} />
